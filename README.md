@@ -1,4 +1,4 @@
-![gradiente](https://raw.githubusercontent.com/Flowscape-UI/gradiente/378cf4dc85befd4d952a05a6bfde67c4be7c3bda/assets/logo.svg?token=AHBVSUSCAWP7PEXERSJABITJ4PKTS)
+![gradiente](https://raw.githubusercontent.com/Flowscape-UI/gradiente/fff32510afe7e3e1b7b2f73dbf7246843a06d859/assets/logo.svg)
 
 <a href="https://www.npmjs.com/package/gradiente">
     <img src="https://img.shields.io/npm/v/gradiente.svg?style=flat-square&labelColor=d84f4c&color=black" alt="npm version">
