@@ -1,7 +1,7 @@
 {
   "name": "gradiente",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight gradient toolkit for modern rendering systems.",
   "author": "Nice Arti <nikcrav@gmail.com>",
   "license": "MIT",
