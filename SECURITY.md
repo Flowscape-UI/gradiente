@@ -3,7 +3,7 @@
 If you believe you have found a security issue in Gradiente, please report it by opening a GitHub Issue in this repository.
 
 Repository issues:
-https://github.com/NiceArti/gradiente/issues
+https://github.com/Flowscape-UI/gradiente/issues
 
 ---
 
