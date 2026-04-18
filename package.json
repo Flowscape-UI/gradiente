@@ -29,13 +29,9 @@
     "url": "https://github.com/Flowscape-UI/gradiente/issues"
   },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs"
-    },
+    ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
@@ -56,6 +52,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.5.0",
+    "@typescript/native-preview": "7.0.0-dev.20260418.1",
     "bumpp": "^11.0.1",
     "eslint": "^10.2.0",
     "tsdown": "^0.21.7",

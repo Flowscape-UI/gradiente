@@ -1,4 +1,15 @@
-![gradiente](./assets/logo.svg)
+![gradiente](https://raw.githubusercontent.com/Flowscape-UI/gradiente/378cf4dc85befd4d952a05a6bfde67c4be7c3bda/assets/logo.svg?token=AHBVSUSCAWP7PEXERSJABITJ4PKTS)
+
+<a href="https://www.npmjs.com/package/gradiente">
+    <img src="https://img.shields.io/npm/v/gradiente.svg?style=flat-square&labelColor=d84f4c&color=black" alt="npm version">
+</a>
+<a href="https://bundlephobia.com/result?p=gradiente">
+    <img src="https://img.shields.io/bundlephobia/minzip/gradiente?style=flat-square&labelColor=d84f4c&color=black" alt="bundle size">
+</a>
+<a href="https://www.npmjs.com/package/gradiente">
+    <img src="https://img.shields.io/npm/dw/gradiente?style=flat-square&labelColor=d84f4c&color=black" alt="weekly downloads">
+</a>
+
 
 # Gradiente
 
@@ -10,25 +21,13 @@ It is built for rendering systems, visual editors, and developer tools where gra
 
 ---
 
-## Why
-
-CSS gradients are expressive, but difficult to work with programmatically.
-
-They are usually:
-
-* string-based
-* hard to normalize
-* full of implicit behavior
-* awkward to use in renderers and editors
-
-Gradiente solves that by parsing gradients into a predictable internal model that is easy to inspect, transform, render, and extend.
-
----
-
 ## Installation
 
 ```bash
 npm install gradiente
+bun add gradiente
+pnpm add gradiente
+yarn add gradiente
 ```
 
 ---
@@ -41,7 +40,7 @@ import { parse } from 'gradiente';
 const gradient = parse('linear-gradient(red, blue)');
 ```
 
-Result:
+## Result:
 
 ```ts
 {
@@ -101,35 +100,6 @@ Instead of getting a raw string you have to manually interpret, you get real dat
 
 ---
 
-### Normalizes missing stop positions
-
-```ts
-parse('linear-gradient(red, blue)')
-```
-
-becomes:
-
-```ts
-red 0%
-blue 100%
-```
-
-That means your renderer or editor does not need to guess defaults later.
-
----
-
-### Expands repeating gradients into actual stops
-
-```ts
-parse('repeating-linear-gradient(red 10%, blue 20%)')
-```
-
-produces a stop list that continues until the gradient pattern fills `100%+`.
-
-This makes repeating gradients much easier to render and inspect.
-
----
-
 ### Keeps values renderer-friendly
 
 Angles and positions are normalized into a stable internal representation so they are easier to use in:
@@ -140,103 +110,7 @@ Angles and positions are normalized into a stable internal representation so the
 * Konva
 * custom graphics engines
 
----
 
-## Public API
-
-### `parse(value: string)`
-
-Parses any supported gradient string into a normalized gradient node.
-
-```ts
-import { parse } from 'gradiente';
-
-const gradient = parse('radial-gradient(circle at center, red, blue)');
-```
-
----
-
-## Output Shape
-
-All parsed gradients follow a predictable structure:
-
-```ts
-type GradientNode =
-  | LinearGradientNode
-  | RadialGradientNode
-  | ConicGradientNode;
-```
-
-Each gradient contains:
-
-```ts
-{
-  kind: 'linear' | 'radial' | 'conic',
-  repeat: 'normal' | 'repeating',
-  stops: GradientColorStopNode[]
-}
-```
-
----
-
-## Stop Format
-
-Gradiente resolves gradients into a clean stop model:
-
-```ts
-{
-  kind: 'color-stop',
-  color: string,
-  position: {
-    kind: 'percentage',
-    value: number
-  }
-}
-```
-
-This makes the data much easier to use in custom pipelines.
-
----
-
-## Examples
-
-### Linear
-
-```ts
-parse('linear-gradient(to right, red, blue)')
-```
-
-### Repeating Linear
-
-```ts
-parse('repeating-linear-gradient(red 10%, blue 20%)')
-```
-
-### Radial
-
-```ts
-parse('radial-gradient(circle at center, red, blue)')
-```
-
-### Repeating Radial
-
-```ts
-parse('repeating-radial-gradient(circle at center, red 10%, blue 20%)')
-```
-
-### Conic
-
-```ts
-parse('conic-gradient(from 45deg at center, red, blue)')
-```
-
-### Repeating Conic
-
-```ts
-parse('repeating-conic-gradient(from 45deg at center, red 10%, blue 20%)')
-```
-
----
 
 ## Design Goals
 
@@ -299,9 +173,3 @@ Not a browser quirk to emulate.
 A piece of graphics data you can actually use.
 
 > **Build gradients like an engine, not like a stylesheet.**
-
----
-
-## License
-
-MIT
