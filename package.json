@@ -1,0 +1,68 @@
+{
+  "name": "gradiente",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Lightweight gradient toolkit for modern rendering systems.",
+  "author": "Nice Arti <nikcrav@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/Flowscape-UI/gradiente#readme",
+  "keywords": [
+    "gradient",
+    "gradients",
+    "color",
+    "css",
+    "graphics",
+    "rendering",
+    "css-gradient",
+    "linear-gradient",
+    "radial-gradient",
+    "conic-gradient",
+    "gradient-parser",
+    "canvas",
+    "webgl"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flowscape-UI/gradiente.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Flowscape-UI/gradiente/issues"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp",
+    "prepublishOnly": "pnpm run build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.5.0",
+    "bumpp": "^11.0.1",
+    "eslint": "^10.2.0",
+    "tsdown": "^0.21.7",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.2",
+    "vite": "^8.0.8",
+    "vitepress": "^1.6.4",
+    "vitest": "^4.1.2"
+  }
+}
