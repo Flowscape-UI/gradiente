@@ -6,7 +6,7 @@
 
   <p>Minimalist & lightweight engine for sophisticated web gradients</p>
 
-  <img src="./assets//flowscape-badge.svg" alt="npm version" />
+  <img src="https://raw.githubusercontent.com/Flowscape-UI/gradiente/d8429051f700698f664d8d2392cfa58a604f8e83/assets/flowscape-badge.svg" alt="npm version" />
   <br />
 
   <a href="https://www.npmjs.com/package/gradiente">
