@@ -1,25 +1,17 @@
 {
   "name": "gradiente",
   "type": "module",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Lightweight gradient toolkit for modern rendering systems.",
   "author": "Nice Arti <nikcrav@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/Flowscape-UI/gradiente#readme",
   "keywords": [
+    "gradiente",
     "gradient",
     "gradients",
-    "color",
-    "css",
-    "graphics",
-    "rendering",
-    "css-gradient",
-    "linear-gradient",
-    "radial-gradient",
-    "conic-gradient",
-    "gradient-parser",
-    "canvas",
-    "webgl"
+    "flowscape",
+    "color"
   ],
   "repository": {
     "type": "git",
@@ -51,6 +43,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/culori": "^4.0.1",
     "@types/node": "^25.5.0",
     "@typescript/native-preview": "7.0.0-dev.20260418.1",
     "bumpp": "^11.0.1",
@@ -61,5 +54,8 @@
     "vite": "^8.0.8",
     "vitepress": "^1.6.4",
     "vitest": "^4.1.2"
+  },
+  "dependencies": {
+    "culori": "^4.0.2"
   }
 }

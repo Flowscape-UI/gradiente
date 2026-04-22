@@ -1,4 +1,3 @@
-import { TokenKind, type GradientLexerToken } from "../../token";
 import { roundTo } from "./base";
 
 export type AngleUnit = 'deg' | 'rad' | 'turn' | 'grad';
@@ -62,18 +61,4 @@ export function normalizeAngle(
     digits = 6,
 ): number {
     return roundTo(normalizeAngleRad(toAngleRad(value, unit)), digits);
-}
-
-export function parseAngleFromToken(
-    token: GradientLexerToken
-): number | null {
-    if (token.kind !== TokenKind.DIMENSION) {
-        return null;
-    }
-
-    if (!isAngleUnit(token.unit)) {
-        return null;
-    }
-
-    return normalizeAngle(token.value, token.unit);
 }

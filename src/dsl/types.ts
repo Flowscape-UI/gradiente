@@ -1,0 +1,16 @@
+export enum PatternTokenKind {
+    START = "^",
+    END = ".",
+    GROUP_OPEN = "(",
+    GROUP_CLOSE = ")",
+    COMMA = ",",
+    SEQUENCE_OPEN = "[",
+    SEQUENCE_CLOSE = "]",
+    OR = "|",
+    AND = "&",
+    NOT = "!",
+    REPEAT = "~",
+    CONFIG = "config",
+    COLOR_STOP = "color-stop",
+    COLOR_HINT = "color-hint",
+}
