@@ -1,4 +1,5 @@
 <div align="center">
+
   <img src="https://raw.githubusercontent.com/Flowscape-UI/gradiente/fff32510afe7e3e1b7b2f73dbf7246843a06d859/assets/logo.svg" alt="gradiente logo" />
 
   <h1>gradiente</h1>
@@ -20,63 +21,74 @@
 </div>
 
 
-## Getting Started
-gradiente is a **data layer for gradients**.
+# Gradiente
 
-It turns gradient strings into structured, predictable objects that can be validated, transformed, and reused across different systems.
+**Gradiente** is a lightweight gradient parser and transformer for modern rendering systems.
 
-Instead of treating gradients as strings:
-```css
-linear-gradient(red, blue)
+Parse CSS gradients → work with structured data → render anywhere.
+
+> Gradients as data, not strings.
+
+
+## Install
+
+```bash
+npm install gradiente
 ```
-You work with **structured data**.
 
-## Documentation
+
+## Example
+
+```ts
+import { parse, transformTo } from "gradiente";
+
+const gradient = parse("linear-gradient(red, blue)");
+
+const css = transformTo("css", gradient);
+const canvas = transformTo("canvas", gradient);
+
+canvas.draw(ctx, 300, 300);
+```
+
 The full documentation is published on [gradiente docs](https://flowscape-ui.github.io/gradiente/). Some quick entry points:
 
 - [Getting started](https://flowscape-ui.github.io/gradiente/getting-started.html)
 - [API References](https://flowscape-ui.github.io/gradiente/core-api/working-with-gradients.html)
 - [Custom Gradients](https://flowscape-ui.github.io/gradiente/core-api/custom-gradients.html)
 
-## Why
-Gradients are more than just visual output.
 
-They are:
-- user input
-- editable state
-- serializable data
-- cross-platform definitions
+## What it does
 
-gradiente gives you full control over that layer.
+- Parses gradients into structured objects
+- Normalizes angles, positions, and stops
+- Transforms gradients to different targets:
+  - CSS
+  - Canvas
+  - (more coming)
 
-## Features
-- Parse gradient strings → structured data
-- Normalize and validate inputs
-- Serialize back to CSS
-- Transform gradients to different targets
-- Custom gradient types via Pattern DSL
-- Works with Canvas, WebGL, editors, and rendering engines
+---
 
-## Part of Flowscape
-gradiente is part of the **Flowscape ecosystem**.<br />
-Flowscape is a developer-first 2D engine designed for building:
-- visual editors
-- design tools
-- builders
-- infinite canvas systems
+## Built for
 
-gradiente provides the **gradient system layer** - used inside Flowscape.
+* design tools
+* visual editors
+* canvas engines
+* WebGL / Pixi / Konva
+* custom rendering pipelines
 
-## Community
-- GitHub Issues → bug reports / feature requests
-- Discussions (soon)
+---
+
+## Philosophy
+
+Gradiente treats gradients as a graphics primitive.
+
+Not a string to preserve -
+but data you can transform and render anywhere.
 
 ## Contributing
+
 Contributions of all kinds (feedback, ideas, bug fixes, documentation) are welcome.
 
 Please open a GitHub issue/discussion before putting in any work that’s not straightforward.
 
-More in [CONTRIBUTING.md](./CONTRIBUTING.md).
-
-## License
-MIT
+More in [CONTRIBUTING.md](../../CONTRIBUTING.md).

@@ -34,7 +34,6 @@
     "docs:build": "pnpm --filter gradiente-docs build",
     "docs:preview": "pnpm --filter gradiente-docs preview",
     
-    
     "playground:add": "pnpm add --filter gradiente-playground",
     "playground:add-dev": "pnpm add -D --filter gradiente-playground",
     "playground:dev": "pnpm --filter gradiente-playground dev",
