@@ -8,17 +8,17 @@ export default defineConfig({
 
   head: [
     // 1. Main icons
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' }],
+    ['link', { rel: 'icon', href: '/gradiente/favicon.ico' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/gradiente/favicon-16x16.png' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/gradiente/favicon-32x32.png' }],
 
     // 2. Apple touch
-    ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
+    ['link', { rel: 'apple-touch-icon', href: '/gradiente/apple-touch-icon.png' }],
 
     // 3. Webmanifest and Android icons
-    ['link', { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/android-chrome-192x192.png' }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/android-chrome-512x512.png' }],
-    ['link', { rel: 'manifest', href: '/site.webmanifest' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/gradiente/android-chrome-192x192.png' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/gradiente/android-chrome-512x512.png' }],
+    ['link', { rel: 'manifest', href: '/gradiente/site.webmanifest' }],
 
     ['meta', { name: 'theme-color', content: '#d84f4c' }],
   ],

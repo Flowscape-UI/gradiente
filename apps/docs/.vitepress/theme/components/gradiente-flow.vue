@@ -16,7 +16,7 @@ const nodes = [
     data: {
       label: h('div', { class: 'node-content' }, [
         h('img', {
-          src: '/logo.svg',
+          src: '/gradiente/logo.svg',
           style: {
             width: '48px',
             height: '48px',
@@ -35,7 +35,7 @@ const nodes = [
     data: {
       label: h('div', { class: 'node-content' }, [
         h('img', {
-          src: '/icons/css.svg',
+          src: '/gradiente/icons/css.svg',
           style: {
             width: '48px',
             height: '48px',
@@ -53,7 +53,7 @@ const nodes = [
     data: {
       label: h('div', { class: 'node-content' }, [
         h('img', {
-          src: '/icons/html.svg',
+          src: '/gradiente/icons/html.svg',
           style: {
             width: '48px',
             height: '48px',
@@ -71,7 +71,7 @@ const nodes = [
     data: {
       label: h('div', { class: 'node-content' }, [
         h('img', {
-          src: '/icons/webgl.svg',
+          src: '/gradiente/icons/webgl.svg',
           style: {
             width: '48px',
             height: '48px',
@@ -89,7 +89,7 @@ const nodes = [
     data: {
       label: h('div', { class: 'node-content' }, [
         h('img', {
-            src: '/icons/flowscape.svg',
+            src: '/gradiente/icons/flowscape.svg',
             style: {
                 width: '48px',
                 height: '48px',
