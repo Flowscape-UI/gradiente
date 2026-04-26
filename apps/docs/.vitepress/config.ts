@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: "gradiente",
   description: "Lightweight gradient toolkit for modern rendering systems.",
+  base: '/gradiente/',
 
   head: [
     // 1. Main icons
