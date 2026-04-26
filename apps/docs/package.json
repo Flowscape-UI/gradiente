@@ -1,0 +1,29 @@
+{
+  "name": "gradiente-docs",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Docs made by Flowscape UI for Gradiente",
+  "author": "Flowscape UI. Nice Arti <nikcrav@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/Flowscape-UI/gradiente#readme",
+  "scripts": {
+    "dev": "vitepress dev .",
+    "build": "vitepress build .",
+    "preview": "vitepress preview ."
+  },
+  "dependencies": {
+    "gradiente": "^2.0.0"
+  },
+  "devDependencies": {
+    "@codemirror/basic-setup": "^0.20.0",
+    "@codemirror/commands": "^6.10.3",
+    "@codemirror/language": "^6.12.3",
+    "@codemirror/state": "^6.6.0",
+    "@codemirror/view": "^6.41.1",
+    "@vue-flow/background": "^1.3.2",
+    "@vue-flow/core": "^1.48.2",
+    "vite": "^8.0.8",
+    "vitepress": "^1.6.4"
+  }
+}
