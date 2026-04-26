@@ -19,24 +19,24 @@
     "dev": "pnpm --filter gradiente dev",
     "test": "pnpm --filter gradiente test",
     "typecheck": "pnpm --filter gradiente typecheck",
-    "docs:dev": "pnpm --filter docs dev",
-    "docs:build": "pnpm --filter docs build",
-    "docs:preview": "pnpm --filter docs preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-
+    
     "add:pkg": "pnpm add",
     "add:pkg:dev": "pnpm add -D",
-
+    
     "add:gradiente": "pnpm add --filter gradiente",
     "add:gradiente:dev": "pnpm add -D --filter gradiente",
-
-    "add:docs": "pnpm add --filter gradiente-docs",
-    "add:docs:dev": "pnpm add -D --filter gradiente-docs",
-
-    "add:playground": "pnpm add --filter gradiente-playground",
-    "add:playground:dev": "pnpm add -D --filter gradiente-playground",
-
+    
+    "docs:add": "pnpm add --filter gradiente-docs",
+    "docs:add-dev": "pnpm add -D --filter gradiente-docs",
+    "docs:dev": "pnpm --filter gradiente-docs dev",
+    "docs:build": "pnpm --filter gradiente-docs build",
+    "docs:preview": "pnpm --filter gradiente-docs preview",
+    
+    
+    "playground:add": "pnpm add --filter gradiente-playground",
+    "playground:add-dev": "pnpm add -D --filter gradiente-playground",
     "playground:dev": "pnpm --filter gradiente-playground dev",
     "playground:build": "pnpm --filter gradiente-playground build",
     "playground:preview": "pnpm --filter gradiente-playground preview"
