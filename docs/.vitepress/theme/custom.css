@@ -1,0 +1,356 @@
+@import './oracle-sans.css';
+
+/* ================================================== */
+/*           Light Theme (Oracle Deep Dark)           */
+/* ================================================== */
+:root {
+    --vp-font-family-base: "Oracle Sans", system-ui, sans-serif;
+    --vp-font-family-mono: monospace;
+
+    /* Акцентный красный Oracle */
+    --vp-c-brand-1: #d84f4c;
+    --vp-c-brand-2: #b03a37;
+    --vp-c-brand-3: #8e2f2c;
+    --vp-c-brand-soft: rgba(216, 79, 76, 0.14);
+
+    /* Фон и текст */
+    --vp-c-bg: #fcebdd;
+    --vp-c-bg-soft: #fddab9;
+    --vp-c-bg-alt: #ffffff;
+    
+    --vp-c-text-1: #1a1a1a;
+    --vp-c-text-2: #454545;
+
+    /* Hero section */
+    --vp-home-hero-name-color: #ffffff;
+    --vp-home-hero-name-background: none;
+
+    --vp-c-divider: #f9f9f9;
+    --vp-input-border-color: #ededed;
+    --vp-c-neutral-inverse: #ededed;
+}
+
+/* ================================================== */
+/*            Dark Theme (Oracle Deep Dark)           */
+/* ================================================== */
+.dark {
+    /* Фон: Oracle использует не чисто черный, а очень глубокий графит */
+    --vp-c-bg: #161513; 
+    --vp-c-bg-soft: #1c1b19;
+    --vp-c-bg-alt: #232220;
+
+    /* Текст в темной теме должен быть мягким, а не чисто белым */
+    --vp-c-text-1: #ededed;
+    --vp-c-text-2: #b3b3b3;
+
+    /* Акценты в темной теме делаем чуть ярче, чтобы они "горели" */
+    --vp-c-brand-1: #ff7777; 
+    --vp-c-brand-2: #643434;
+    --vp-c-brand-soft: rgba(255, 90, 87, 0.16);
+
+    /* Линии и границы */
+    --vp-c-divider: #2d2c2a;
+    --vp-c-gutter: #000000;
+
+    --vp-home-hero-name-color: #ffffff;
+
+    --vp-c-divider: #f9f9f9;
+    --vp-input-border-color: var(--vp-c-text-1);
+    --vp-c-neutral-inverse: var(--vp-c-text-1);
+
+    /* Menu */
+    --vp-c-divider: var(--vp-c-text-2);
+    --vp-c-bg-elv: var(--vp-c-bg-soft);
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.no-aside .VPDoc.has-sidebar.has-aside .container .aside {
+    display: none !important;
+}
+
+.no-aside .VPDoc.has-sidebar.has-aside .container .content .content-container {
+    width: 100%;
+    max-width: 1920px;
+}
+
+
+.VPNav {
+    background-color: #643434;
+    position: relative;
+}
+.VPNav::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(
+        90deg, 
+        #FF74F6, 
+        #FB7655, 
+        #F63539
+    );
+}
+
+.VPNavBarTitle .title {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #ededed;
+}
+.VPNavBarTitle .logo {
+    height: 40px; /* Подбери нужную высоту */
+    margin-right: 10px;
+}
+
+.VPLink.link.VPNavBarMenuLink,
+.VPFlyout.VPNavBarExtra.extra .button,
+.VPSocialLinks.VPNavBarSocialLinks.social-links,
+.VPSocialLink.no-icon,
+.VPFlyout.VPNavBarTranslations.translations .button .text {
+    color: #ededed;
+}
+
+.VPNavBarHamburger.hamburger .container .top,
+.VPNavBarHamburger.hamburger .container .middle,
+.VPNavBarHamburger.hamburger .container .bottom,
+.DocSearch-Button .DocSearch-Search-Icon {
+    background-color: #ededed;
+    color: #ededed;
+}
+
+.VPHero .container .main .heading {
+    gap: 18px;
+}
+
+
+/* ================================================== */
+/*                         Hero                       */
+/* ================================================== */
+
+.VPHero {
+    background-image:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.2),
+            rgba(0, 0, 0, 0.8) 80%
+        ),
+        url('/backgrounds/hero-bg.jpg');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+
+.VPHero .name.clip {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(3.4rem, 7vw, 5.4rem) !important;
+    line-height: 0.92 !important;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    color: #ffffff !important;
+    text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.18),
+        0 10px 40px rgba(0, 0, 0, 0.22);
+}
+
+.VPHero .tagline {
+    color: #ffffff;
+    text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.18),
+        0 10px 40px rgba(0, 0, 0, 0.22);
+}
+
+.VPHero .text {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(2.2rem, 5vw, 3.9rem) !important;
+    line-height: 0.98 !important;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.18),
+        0 10px 40px rgba(0, 0, 0, 0.22);
+}
+
+
+/* ================================================== */
+/*                    Feature Cards                   */
+/* ================================================== */
+.VPLink.no-icon.VPFeature {
+    border: 1px solid var(--vp-c-divider);
+    background: var(--vp-c-bg);
+    border-radius: 20px;
+    transform: translateY(0);
+    transition: all 0.16s ease;
+}
+
+.VPLink.no-icon.VPFeature:hover {
+    transform: translateY(-4px);
+    border-color: var(--vp-c-brand-1);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+}
+
+.dark .VPFeature:hover {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.VPFeature .title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--vp-c-text-1);
+}
+
+.VPFeature .details {
+    color: var(--vp-c-text-2);
+    line-height: 1.65;
+}
+
+.VPFeatures.VPHomeFeatures {
+    margin-top: -40px;
+}
+
+.VPImage {
+    color: red;
+}
+
+/* ================================================== */
+/*                    HERO BUTTONS                    */
+/* ================================================== */
+
+.VPButton.medium.brand,
+.VPButton.medium.alt {
+    padding: 4px 26px;
+    border-radius: 200px;
+    font-size: 1.1rem;
+}
+
+/* ============================= */
+/* DARK MODE FIX */
+/* ============================= */
+
+.dark .VPHero .action .VPButton.alt {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.dark .VPHero .action .VPButton.alt:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+
+
+.VPFlyout .menu {
+    z-index: 50;
+}
+
+.dark .VPLink.link:hover {
+    color: #d84f4c;
+}
+
+
+
+.gradient-story {
+    max-width: 1120px;
+    margin: 72px auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 42px;
+    align-items: center;
+}
+
+.gradient-story__eyebrow {
+    margin: 0 0 12px;
+    color: var(--vp-c-brand-1);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+}
+
+.gradient-story__content h2 {
+    margin: 0 0 18px;
+    max-width: 620px;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: var(--vp-c-text-1);
+}
+
+.gradient-story__content p {
+    max-width: 620px;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--vp-c-text-2);
+}
+
+.gradient-card {
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--vp-c-bg-soft);
+}
+
+
+.gradient-card__visual {
+    height: 220px;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.6), transparent 26%),
+        linear-gradient(135deg, #ff74f6, #fb7655, #f63539);
+}
+
+.gradient-card__code {
+    padding: 12px 12px;
+    display: grid;
+}
+
+.gradient-card__code .code {
+    border-radius: 12px;
+    background-color: var(--vp-c-bg);
+    color: var(--vp-c-text-1);
+    padding: 6px 12px;
+}
+
+.gradient-card__label {
+    color: var(--vp-c-text-3);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gradient-card__code code {
+    white-space: normal;
+    font-size: 0.92rem;
+    color: var(--vp-c-text-1);
+}
+
+.gradient-card__flow {
+    padding: 0 24px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.gradient-card__flow span {
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 999px;
+    padding: 7px 12px;
+    color: var(--vp-c-text-2);
+    background: var(--vp-c-bg);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+@media (max-width: 860px) {
+    .gradient-story {
+        grid-template-columns: 1fr;
+        margin: 48px auto;
+    }
+}

@@ -1,0 +1,156 @@
+@font-face {
+    font-family: 'Oracle Sans Extra';
+    src: url('/fonts/oracle-sans/oracle-sans/OracleSans-ExtraBold.eot');
+    src: local('Oracle Sans Extra Bold'), local('OracleSans-ExtraBold'),
+        url('/fonts/oracle-sans/OracleSans-ExtraBold.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-ExtraBold.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-ExtraBold.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-ExtraBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans';
+    src: url('/fonts/oracle-sans/OracleSans-Bold.eot');
+    src: local('Oracle Sans Bold'), local('OracleSans-Bold'),
+        url('/fonts/oracle-sans/OracleSans-Bold.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-Bold.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-Bold.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans';
+    src: url('/fonts/oracle-sans/OracleSans-BoldItalic.eot');
+    src: local('Oracle Sans Bold Italic'), local('OracleSans-BoldItalic'),
+        url('/fonts/oracle-sans/OracleSans-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-BoldItalic.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-BoldItalic.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans Extra';
+    src: url('/fonts/oracle-sans/OracleSans-ExtraBoldItalic.eot');
+    src: local('Oracle Sans Extra Bold Italic'), local('OracleSans-ExtraBoldItalic'),
+        url('/fonts/oracle-sans/OracleSans-ExtraBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-ExtraBoldItalic.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-ExtraBoldItalic.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans';
+    src: url('/fonts/oracle-sans/OracleSans-LightItalic.eot');
+    src: local('Oracle Sans Light Italic'), local('OracleSans-LightItalic'),
+        url('/fonts/oracle-sans/OracleSans-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-LightItalic.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-LightItalic.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans';
+    src: url('/fonts/oracle-sans/OracleSans-Light.eot');
+    src: local('Oracle Sans Light'), local('OracleSans-Light'),
+        url('/fonts/oracle-sans/OracleSans-Light.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-Light.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-Light.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans';
+    src: url('/fonts/oracle-sans/OracleSans-Italic.eot');
+    src: local('Oracle Sans Italic'), local('OracleSans-Italic'),
+        url('/fonts/oracle-sans/OracleSans-Italic.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-Italic.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-Italic.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans';
+    src: url('/fonts/oracle-sans/OracleSans-Regular.eot');
+    src: local('Oracle Sans Regular'), local('OracleSans-Regular'),
+        url('/fonts/oracle-sans/OracleSans-Regular.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-Regular.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-Regular.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans Semi';
+    src: url('/fonts/oracle-sans/OracleSans-SemiBoldItalic.eot');
+    src: local('Oracle Sans Semi Bold Italic'), local('OracleSans-SemiBoldItalic'),
+        url('/fonts/oracle-sans/OracleSans-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-SemiBoldItalic.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-SemiBoldItalic.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans Ultra';
+    src: url('/fonts/oracle-sans/OracleSans-UltraLight.eot');
+    src: local('Oracle Sans Ultra Light'), local('OracleSans-UltraLight'),
+        url('/fonts/oracle-sans/OracleSans-UltraLight.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-UltraLight.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-UltraLight.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-UltraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans Semi';
+    src: url('/fonts/oracle-sans/OracleSans-SemiBold.eot');
+    src: local('Oracle Sans Semi Bold'), local('OracleSans-SemiBold'),
+        url('/fonts/oracle-sans/OracleSans-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-SemiBold.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-SemiBold.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Oracle Sans Ultra';
+    src: url('/fonts/oracle-sans/OracleSans-UltraLightItalic.eot');
+    src: local('Oracle Sans Ultra Light Italic'), local('OracleSans-UltraLightItalic'),
+        url('/fonts/oracle-sans/OracleSans-UltraLightItalic.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/oracle-sans/OracleSans-UltraLightItalic.woff2') format('woff2'),
+        url('/fonts/oracle-sans/OracleSans-UltraLightItalic.woff') format('woff'),
+        url('/fonts/oracle-sans/OracleSans-UltraLightItalic.ttf') format('truetype');
+    font-weight: 200;
+    font-style: italic;
+    font-display: swap;
+}
+
