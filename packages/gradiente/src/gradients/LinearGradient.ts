@@ -1,6 +1,19 @@
 import { parseStringToAbi, type GradientAbi } from "../abi";
-import { degToRad, gradToRad, normalizeAngleRad, radToDeg, roundTo, turnToRad, type AngleUnit } from "../utils";
-import { GradientBase, type GradientData } from "./GradientBase";
+import {
+    angleValueFromString,
+    degToRad,
+    gradToRad,
+    isAngle,
+    normalizeAngleDeg,
+    normalizeAngleRad,
+    radToDeg,
+    turnToRad,
+    type AngleUnit
+} from "../utils";
+import {
+    GradientBase,
+    type GradientData
+} from "./GradientBase";
 import type { GradientCommonConfig } from "./types";
 
 export type LinearGradientConfig = GradientCommonConfig & {
@@ -104,22 +117,8 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
             if (inputValue.startsWith('to ')) {
                 config = LinearGradient.normalizeConfig(inputValue);
             } else {
-                const match = inputValue.match(
-                    /^([+-]?(?:\d+\.?\d*|\.\d+))(deg|rad|turn|grad)$/i,
-                );
-
-                if (match === null) {
-                    throw new SyntaxError(`Invalid linear gradient angle: "${inputValue}"`);
-                }
-
-                const rawValue = Number(match[1]);
-                const unit = match[2].toLowerCase() as AngleUnit;
-
-                if (!Number.isFinite(rawValue)) {
-                    throw new SyntaxError(`Invalid linear gradient angle value: "${inputValue}"`);
-                }
-
-                config = LinearGradient.normalizeConfig({ value: rawValue, unit });
+                const angle = angleValueFromString(inputValue);
+                config = LinearGradient.normalizeConfig({ value: angle, unit: "rad" });
             }
         }
 
@@ -139,9 +138,8 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
 
     public override toString(): string {
         const functionName = this.isRepeating ? `repeating-${this.type}` : this.type;
-        const configToString = this.config.angle === 0 ? '' : `${roundTo(radToDeg(this.config.angle), 3)}deg`;
+        const configToString = this._parseConfigToString(this.config);
         const stops = this._serializeStopsCompact();
-
         const parts = [
             configToString,
             ...stops
@@ -151,4 +149,29 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
     }
 
     protected override _validateConfig(_: LinearGradientConfig): void { }
+
+    private _parseConfigToString(config: LinearGradientConfig): string {
+        const { angle } = config;
+        const angleDeg = normalizeAngleDeg(radToDeg(angle), 3);
+        switch (angleDeg) {
+            case 0:
+                return 'to top';
+            case 45:
+                return 'to top right';
+            case 90:
+                return 'to right';
+            case 135:
+                return 'to bottom right';
+            case 180:
+                return ''; // default CSS direction
+            case 225:
+                return 'to bottom left';
+            case 270:
+                return 'to left';
+            case 315:
+                return 'to top left';
+            default:
+                return `${angleDeg}deg`;
+        }
+    }
 }

@@ -18,7 +18,7 @@ class Gradient<TConfig = any> extends GradientBase<TConfig> {
     }
 }
 
-describe("GradientBase", () => {
+describe.only("GradientBase", () => {
     const validConfig = {};
     const validStops: GradientStop[] = [
         {
