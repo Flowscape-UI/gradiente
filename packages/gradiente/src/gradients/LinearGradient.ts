@@ -3,7 +3,6 @@ import {
     angleValueFromString,
     degToRad,
     gradToRad,
-    isAngle,
     normalizeAngleDeg,
     normalizeAngleRad,
     radToDeg,
@@ -23,6 +22,7 @@ export type LinearGradientConfig = GradientCommonConfig & {
 export class LinearGradient extends GradientBase<LinearGradientConfig> {
     public readonly type = "linear-gradient";
     constructor(config: GradientData<LinearGradientConfig>) {
+        config.config.angle = normalizeAngleRad(config.config.angle);
         super(config);
     }
 
@@ -108,7 +108,7 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
     }
 
     public static fromAbi(abi: GradientAbi): LinearGradient {
-        let config = { angle: 0 };
+        let config = { angle: 3.141592 };
         if (abi.inputs[0].type === 'config') {
             const inputValue = abi.inputs[0].value.trim().toLowerCase();
             if (inputValue.length === 0) {

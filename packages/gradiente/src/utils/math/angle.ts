@@ -64,7 +64,7 @@ export function normalizeAngleDeg(value: number, digits: number = 3): number {
     return roundTo(normalized, digits);
 }
 
-export function normalizeAngleRad(value: number): number {
+export function normalizeAngleRad(value: number, digits: number = 6): number {
     const tau = Math.PI * 2;
-    return ((value % tau) + tau) % tau;
+    return roundTo(((value % tau) + tau) % tau, digits);
 }

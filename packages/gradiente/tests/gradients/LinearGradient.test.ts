@@ -465,34 +465,29 @@ describe.only('LinearGradient', () => {
     });
 
     describe('LinearGradient.fromAbi', () => {
-        it('creates a LinearGradient instance from ABI', () => {
-            const gradient = LinearGradient.fromAbi({
+        it('should create a LinearGradient instance from ABI', () => {
+            const config = {
                 functionName: 'linear-gradient',
                 isRepeating: false,
                 inputs: [
                     { type: 'color-stop', value: 'red' },
                     { type: 'color-stop', value: 'blue' },
                 ],
-            });
+            };
+            const repeatingConfig = structuredClone({...config, isRepeating: true});
+
+            const gradient = LinearGradient.fromAbi(config);
+            const repeatingGradient = LinearGradient.fromAbi(repeatingConfig);
 
             expect(gradient).toBeInstanceOf(LinearGradient);
             expect(gradient.type).toBe('linear-gradient');
+            expect(repeatingGradient.type).toBe('linear-gradient');
+
+            expect(gradient.isRepeating).toBe(false);
+            expect(repeatingGradient.isRepeating).toBe(true);
         });
 
-        it('uses the repeating flag from ABI', () => {
-            const gradient = LinearGradient.fromAbi({
-                functionName: 'linear-gradient',
-                isRepeating: true,
-                inputs: [
-                    { type: 'color-stop', value: 'red' },
-                    { type: 'color-stop', value: 'blue' },
-                ],
-            });
-
-            expect(gradient.isRepeating).toBe(true);
-        });
-
-        it('uses default angle when config is missing', () => {
+        it('should return default angle when config is missing', () => {
             const gradient = LinearGradient.fromAbi({
                 functionName: 'linear-gradient',
                 isRepeating: false,
@@ -507,7 +502,7 @@ describe.only('LinearGradient', () => {
             });
         });
 
-        it('parses keyword config from ABI', () => {
+        it.only('should parse keyword config from ABI', () => {
             const gradient = LinearGradient.fromAbi({
                 functionName: 'linear-gradient',
                 isRepeating: false,
