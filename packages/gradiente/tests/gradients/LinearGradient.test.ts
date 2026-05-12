@@ -35,6 +35,24 @@ describe.only('LinearGradient', () => {
             expect(repeatingGradient.isRepeating).toBe(true);
         });
 
+        it('sets the correct interpolation during initialization', () => {
+            const gradient = new LinearGradient({
+                ...gradientConfig,
+                config: {
+                    angle: gradientConfig.config.angle,
+                    interpolation: {
+                        colorSpace: "a98-rgb",
+                        hue: "increasing"
+                    }
+                }
+            });
+
+            expect(gradient.config.interpolation).toEqual({
+                colorSpace: "a98-rgb",
+                hue: "increasing"
+            });
+        });
+
         it('serializes multiple evenly distributed color-stops without explicit positions', () => {
             const gradient = new LinearGradient({
                 isRepeating: false,
@@ -474,7 +492,7 @@ describe.only('LinearGradient', () => {
                     { type: 'color-stop', value: 'blue' },
                 ],
             };
-            const repeatingConfig = structuredClone({...config, isRepeating: true});
+            const repeatingConfig = structuredClone({ ...config, isRepeating: true });
 
             const gradient = LinearGradient.fromAbi(config);
             const repeatingGradient = LinearGradient.fromAbi(repeatingConfig);
@@ -502,7 +520,7 @@ describe.only('LinearGradient', () => {
             });
         });
 
-        it.only('should parse keyword config from ABI', () => {
+        it('should parse keyword config from ABI', () => {
             const gradient = LinearGradient.fromAbi({
                 functionName: 'linear-gradient',
                 isRepeating: false,
@@ -515,6 +533,10 @@ describe.only('LinearGradient', () => {
 
             expect(gradient.config).toEqual({
                 angle: expect.any(Number),
+                "interpolation": {
+                    "colorSpace": "oklab",
+                    "hue": "shorter",
+                },
             });
         });
 
@@ -528,9 +550,32 @@ describe.only('LinearGradient', () => {
                     { type: 'color-stop', value: 'blue' },
                 ],
             });
+            expect(gradient.config).toEqual({
+                angle: expect.any(Number),
+                interpolation: {
+                    hue: "shorter",
+                    colorSpace: "oklab"
+                }
+            });
+        });
+
+        it('should create config with interpolation from ABI', () => {
+            const gradient = LinearGradient.fromAbi({
+                functionName: 'linear-gradient',
+                isRepeating: false,
+                inputs: [
+                    { type: 'config', value: 'to top left in oklch longer hue' },
+                    { type: 'color-stop', value: 'red' },
+                    { type: 'color-stop', value: 'blue' },
+                ],
+            });
 
             expect(gradient.config).toEqual({
                 angle: expect.any(Number),
+                interpolation: {
+                    hue: "longer",
+                    colorSpace: "oklch"
+                }
             });
         });
 
@@ -709,6 +754,10 @@ describe.only('LinearGradient', () => {
 
             expect(gradient.config).toEqual({
                 angle: expect.any(Number),
+                "interpolation": {
+                    "colorSpace": "oklab",
+                    "hue": "shorter",
+                },
             });
 
             expect(gradient.stops).toEqual([
