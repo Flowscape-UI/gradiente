@@ -2,6 +2,19 @@ import "./style.css";
 import { setupThemeToggle } from "./theme-toggle";
 import { setupFormController } from "./form-controller";
 
+import iconReload from "./assets/icon-reload.svg";
+import iconSend from "./assets/icon-send.svg";
+
+document.documentElement.style.setProperty(
+  "--icon-reload",
+  `url("${iconReload}")`
+);
+
+document.documentElement.style.setProperty(
+  "--icon-send",
+  `url("${iconSend}")`
+);
+
 document.querySelector("#app").innerHTML = `
   <header>
     <button type="button" class="theme-toggle" aria-label="Toggle theme">
@@ -15,8 +28,12 @@ document.querySelector("#app").innerHTML = `
         class="gradient-input"
         placeholder="Write gradient here..."
       />
-      <button type="submit">Test</button>
-      <button type="button" class="generate-random-gradient">Random</button>
+      <button type="submit">
+        <img width="30px" height="30px" src="${iconSend}" alt="Send" />
+      </button>
+      <button type="button" class="generate-random-gradient">
+        <img width="30px" height="30px" src="${iconReload}" alt="Reload" />
+      </button>
     </form>
 
     <div class="container content">

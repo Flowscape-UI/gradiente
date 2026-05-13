@@ -90,6 +90,17 @@ header {
     }
 }
 
+.send-icon {
+    mask-image: var(--icon-send);
+    -webkit-mask-image: var(--icon-send);
+}
+
+.reload-icon {
+        width: 20px;
+    height: 20px;
+    mask-image: var(--icon-reload);
+    -webkit-mask-image: var(--icon-reload);
+}
 
 .draw-area {
     width: min(100%, 240px);
