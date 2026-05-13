@@ -1,6 +1,23 @@
-import { GradientFactory, type GradientBase } from "../gradients";
-import { ModuleTransformerConicGradientToCanvas, ModuleTransformerConicGradientToCss, ModuleTransformerLinearGradientToCanvas, ModuleTransformerLinearGradientToCss, ModuleTransformerRadialGradientToCanvas, ModuleTransformerRadialGradientToCss } from "./modules";
-import type { IGradientTransformerModule } from "./modules/types";
+import {
+    GradientFactory,
+    type GradientBase
+} from "../gradients";
+import {
+    // CSS
+    ModuleTransformerLinearGradientToCss,
+    ModuleTransformerConicGradientToCss,
+    ModuleTransformerRadialGradientToCss,
+
+    // Canvas 2D
+    ModuleTransformerConicGradientToCanvas,
+    ModuleTransformerLinearGradientToCanvas,
+    ModuleTransformerRadialGradientToCanvas,
+
+    // Canvas WebGL
+    ModuleTransformerLinearGradientToCanvasWebGL,
+
+    type IGradientTransformerModule,
+} from "./modules";
 
 export class GradientTransformer {
     private static readonly _modules = new Map<string, IGradientTransformerModule>();
@@ -72,6 +89,9 @@ export class GradientTransformer {
         this.add(new ModuleTransformerLinearGradientToCanvas());
         this.add(new ModuleTransformerRadialGradientToCanvas());
         this.add(new ModuleTransformerConicGradientToCanvas());
+
+        // CanvasWebGL
+        this.add(new ModuleTransformerLinearGradientToCanvasWebGL());
     }
 
     private static _getKey(target: string, gradientType: string): string {

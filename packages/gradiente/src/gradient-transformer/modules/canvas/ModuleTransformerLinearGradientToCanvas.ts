@@ -1,6 +1,7 @@
 import { converter, formatRgb } from "culori";
 import type { GradientBase, GradientStop, LinearGradient } from "../../../gradients";
 import type { ICanvasPaintResult, IGradientTransformerModule } from "../types";
+import { resolveRenderableLinearGradientStops } from "../helpers";
 
 const toRgb = converter("rgb");
 
@@ -40,45 +41,47 @@ function normalizeStops(stops: GradientStop[], min: number, max: number) {
         }));
 }
 
-export class ModuleTransformerLinearGradientToCanvas
-    implements IGradientTransformerModule<ICanvasPaintResult> {
-    public readonly target = "canvas";
+export class ModuleTransformerLinearGradientToCanvas implements IGradientTransformerModule<ICanvasPaintResult> {
+    public readonly target = "canvas-2d";
     public readonly gradientType = "linear-gradient";
 
     public to(input: GradientBase<any>): ICanvasPaintResult {
         const gradient = input as LinearGradient;
-
         return {
             draw: (ctx, width, height) => {
                 const angle = gradient.config.angle;
-                const cx = width / 2;
-                const cy = height / 2;
-                const half = Math.max(width, height) / 2;
 
-                const dx = Math.sin(angle) * half;
-                const dy = Math.cos(angle) * half;
+                const dirX = Math.sin(angle);
+                const dirY = -Math.cos(angle);
 
-                const x0 = cx - dx;
-                const y0 = cy - dy;
-                const x1 = cx + dx;
-                const y1 = cy + dy;
+                const centerX = width / 2;
+                const centerY = height / 2;
 
-                const { min, max, stops } = getStopRange(gradient.stops);
+                const lineLength =
+                    Math.abs(width * dirX) +
+                    Math.abs(height * dirY);
 
-                let startX = x0;
-                let startY = y0;
-                let endX = x1;
-                let endY = y1;
+                let startX = centerX - (dirX * lineLength) / 2;
+                let startY = centerY - (dirY * lineLength) / 2;
+                let endX = centerX + (dirX * lineLength) / 2;
+                let endY = centerY + (dirY * lineLength) / 2;
+
+                const renderStops = resolveRenderableLinearGradientStops(gradient);
+                const { min, max, stops } = getStopRange(renderStops);
+
                 let normalizedStops = stops;
 
                 if (min < 0 || max > 1) {
-                    const vx = x1 - x0;
-                    const vy = y1 - y0;
+                    const vx = endX - startX;
+                    const vy = endY - startY;
 
-                    startX = x0 + vx * min;
-                    startY = y0 + vy * min;
-                    endX = x0 + vx * max;
-                    endY = y0 + vy * max;
+                    const baseStartX = startX;
+                    const baseStartY = startY;
+
+                    startX = baseStartX + vx * min;
+                    startY = baseStartY + vy * min;
+                    endX = baseStartX + vx * max;
+                    endY = baseStartY + vy * max;
 
                     normalizedStops = normalizeStops(stops, min, max);
                 }
@@ -91,9 +94,13 @@ export class ModuleTransformerLinearGradientToCanvas
                 );
 
                 for (const stop of normalizedStops) {
-                    canvasGradient.addColorStop(stop.position, toCanvasColor(stop.value));
+                    canvasGradient.addColorStop(
+                        stop.position,
+                        toCanvasColor(stop.value),
+                    );
                 }
 
+                ctx.clearRect(0, 0, width, height);
                 ctx.fillStyle = canvasGradient;
                 ctx.fillRect(0, 0, width, height);
             }

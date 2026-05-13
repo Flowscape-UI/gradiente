@@ -40,7 +40,7 @@ function normalizeStops(stops: GradientStop[], min: number, max: number) {
 
 export class ModuleTransformerRadialGradientToCanvas
     implements IGradientTransformerModule<ICanvasPaintResult> {
-    public readonly target = "canvas";
+    public readonly target = "canvas-2d";
     public readonly gradientType = "radial-gradient";
 
     public to(input: GradientBase<any>): ICanvasPaintResult {

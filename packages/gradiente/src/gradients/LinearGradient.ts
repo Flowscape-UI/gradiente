@@ -14,6 +14,7 @@ import {
 import {
     isGradientColorSpace,
     isGradientHueInterpolation,
+    isGradientPolarColorSpace,
     type GradientColorSpace,
     type GradientHueInterpolation
 } from "./helpers";
@@ -47,6 +48,10 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
     public readonly type = "linear-gradient";
     constructor(config: GradientData<LinearGradientConfig>) {
         config.config.angle = normalizeAngleRad(config.config.angle);
+        if (config.config.interpolation) {
+            config.config.interpolation = LinearGradient._normalizeConfigInterpolation(config.config.interpolation);
+            console.log(config)
+        }
         super(config);
     }
 
@@ -162,7 +167,6 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
             if (inputValue.length === 0) {
                 throw new SyntaxError("Linear gradient config cannot be empty");
             }
-
             config = LinearGradient.normalizeConfig(inputValue);
         }
 
@@ -194,9 +198,42 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
 
     protected override _validateConfig(_: LinearGradientConfig): void { }
 
+    private static _normalizeConfigInterpolation(value: GradientInterpolation): GradientInterpolation {
+        const { colorSpace, hue } = value;
+
+        if (hue === undefined) {
+            return { colorSpace };
+        }
+
+        if (!isGradientPolarColorSpace(colorSpace)) {
+            return { colorSpace };
+        }
+
+        return {
+            colorSpace,
+            hue,
+        };
+    }
+
     private _parseConfigToString(config: LinearGradientConfig): string {
-        const { angle } = config;
+        const { angle, interpolation } = config;
+        const configParts: string[] = [];
+        const angleString = this._parseAngleToString(angle);
+
+        if (angleString.length > 0) {
+            configParts.push(angleString);
+        }
+
+        if (interpolation !== undefined) {
+            configParts.push(this._parseInterpolationToString(interpolation));
+        }
+
+        return configParts.join(" ");
+    }
+
+    private _parseAngleToString(angle: number): string {
         const angleDeg = normalizeAngleDeg(radToDeg(angle), 3);
+
         switch (angleDeg) {
             case 0:
                 return "to top";
@@ -217,6 +254,18 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
             default:
                 return `${angleDeg}deg`;
         }
+    }
+
+    private _parseInterpolationToString(
+        interpolation: GradientInterpolation,
+    ): string {
+        const { colorSpace, hue } = interpolation;
+
+        if (hue === undefined) {
+            return `in ${colorSpace}`;
+        }
+
+        return `in ${colorSpace} ${hue} hue`;
     }
 
     private static _tokenizeConfigInput(value: string): LinearGradientConfigToken[] {

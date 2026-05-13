@@ -26,7 +26,7 @@ type ConicColorStop = {
 
 export class ModuleTransformerConicGradientToCanvas
     implements IGradientTransformerModule<ICanvasPaintResult> {
-    public readonly target = "canvas";
+    public readonly target = "canvas-2d";
     public readonly gradientType = "conic-gradient";
 
     public to(input: GradientBase<any>): ICanvasPaintResult {

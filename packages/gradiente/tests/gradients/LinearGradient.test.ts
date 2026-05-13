@@ -480,6 +480,45 @@ describe.only('LinearGradient', () => {
             expect(result).toContain('brown 80%');
             expect(result).toContain('white 100%');
         });
+
+        it('should serialize interpolation with hue path to string', () => {
+            const gradient = new LinearGradient({
+                ...gradientConfig,
+                config: {
+                    ...gradientConfig.config,
+                    angle: Math.PI, // 180deg, default CSS direction
+                    interpolation: {
+                        colorSpace: 'oklch',
+                        hue: 'longer',
+                    },
+                },
+            });
+
+            expect(gradient.toString()).toBe(
+                'linear-gradient(in oklch longer hue, red 0%, 50%, blue 100%)'
+            );
+        });
+
+        it('should parse gradient string with interpolation and hue path and serialize it back to string', () => {
+            const gradient = LinearGradient.fromString(
+                'linear-gradient(in oklch longer hue, red, blue)'
+            );
+            expect(gradient.toString()).toBe(
+                'linear-gradient(in oklch longer hue, red, blue)'
+            );
+        });
+
+        it.only('should parse gradient string with angle, interpolation and hue path and serialize it back to string', () => {
+            const gradient = LinearGradient.fromString(
+                'linear-gradient(53deg in oklab shorter hue, hsl(238, 65%, 62%) 0%, hsl(227, 84%, 40%) 40%, hsl(141, 97%, 53%) 100%)'
+            );
+
+            console.log(gradient.toString());
+
+            expect(gradient.toString()).toBe(
+                'linear-gradient(53deg in oklab, hsl(238, 65%, 62%) 0%, hsl(227, 84%, 40%) 40%, hsl(141, 97%, 53%) 100%)'
+            );
+        });
     });
 
     describe('LinearGradient.fromAbi', () => {

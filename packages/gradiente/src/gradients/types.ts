@@ -1,3 +1,5 @@
+import type { GradientPolarColorSpace } from "./helpers";
+
 /**
  * Shared scalar units
  */
@@ -85,12 +87,6 @@ export type GradientRectangularColorSpace =
     | "xyz"
     | "xyz-d50"
     | "xyz-d65";
-
-export type GradientPolarColorSpace =
-    | "hsl"
-    | "hwb"
-    | "lch"
-    | "oklch";
 
 export type GradientColorInterpolation =
     | {
