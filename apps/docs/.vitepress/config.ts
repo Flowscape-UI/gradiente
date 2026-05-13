@@ -48,7 +48,7 @@ export default defineConfig({
             text: 'Playground',
             items: [
               { text: 'DSL Playground', link: '/playground/dsl' },
-              { text: 'Gradient Playground', link: 'https://gradient.style' }
+              { text: 'Gradient Playground', link: 'https://flowscape-ui.github.io/gradiente/playground' }
             ]
           }
         ],
@@ -85,7 +85,7 @@ export default defineConfig({
             text: 'Playground',
             items: [
               { text: 'DSL Playground', link: '/playground/dsl' },
-              { text: 'Gradient Playground', link: 'https://gradient.style' }
+              { text: 'Gradient Playground', link: 'https://flowscape-ui.github.io/gradiente/playground' }
             ]
           },
         ]
@@ -104,7 +104,7 @@ export default defineConfig({
             text: 'Playground',
             items: [
               { text: 'DSL Playground', link: '/playground/dsl' },
-              { text: 'Gradient Playground', link: 'https://gradient.style' }
+              { text: 'Gradient Playground', link: 'https://flowscape-ui.github.io/gradiente/playground' }
             ]
           }
         ],
@@ -141,7 +141,7 @@ export default defineConfig({
             text: 'Playground',
             items: [
               { text: 'DSL Playground', link: '/playground/dsl' },
-              { text: 'Gradient Playground', link: 'https://gradient.style' }
+              { text: 'Gradient Playground', link: 'https://flowscape-ui.github.io/gradiente/playground' }
             ]
           },
         ]
