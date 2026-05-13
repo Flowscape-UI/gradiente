@@ -21,6 +21,11 @@
     "typecheck": "pnpm --filter gradiente typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+
+    "update-patch:gradiente": "npm version patch --prefix packages/gradiente",
+    "update-minor:gradiente": "npm version minor --prefix packages/gradiente",
+    "update-major:gradiente": "npm version major --prefix packages/gradiente",
+    "publish:gradiente": "npm publish ./packages/gradiente",
     
     "add:pkg": "pnpm add",
     "add:pkg:dev": "pnpm add -D",

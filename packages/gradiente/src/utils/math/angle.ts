@@ -11,6 +11,38 @@ export function isAngleUnit(unit: string): unit is AngleUnit {
     );
 }
 
+export function isAngle(value: string): boolean {
+    try {
+        return typeof angleValueFromString(value) === "number";
+    } catch (e) {
+        return false;
+    }
+}
+
+export function angleValueFromString(value: string): number {
+    const match = value.match(/^([+-]?(?:\d+\.?\d*|\.\d+))(deg|rad|turn|grad)$/);
+    if (match === null) {
+        throw new Error(`Invalid angle value: "${value}"`);
+    }
+    if (!isAngleUnit(match[2])) {
+        throw new Error(`Unsupported angle unit: "${match[2]}"`);
+    }
+    if (!Number.isFinite(+match[1])) {
+        throw new SyntaxError(`Invalid angle value: "${match[1]}"`);
+    }
+    const angleValue = Number(match[1]);
+    switch (match[2]) {
+        case 'deg':
+            return degToRad(angleValue);
+        case 'rad':
+            return angleValue;
+        case 'turn':
+            return turnToRad(angleValue);
+        case 'grad':
+            return gradToRad(angleValue);
+    }
+}
+
 export function degToRad(value: number): number {
     return (value * Math.PI) / 180;
 }
@@ -27,38 +59,12 @@ export function gradToRad(value: number): number {
     return (value * Math.PI) / 200;
 }
 
-
 export function normalizeAngleDeg(value: number, digits: number = 3): number {
     const normalized = ((value % 360) + 360) % 360;
     return roundTo(normalized, digits);
 }
 
-export function normalizeAngleRad(value: number): number {
+export function normalizeAngleRad(value: number, digits: number = 6): number {
     const tau = Math.PI * 2;
-    return ((value % tau) + tau) % tau;
-}
-
-export function toAngleRad(value: number, unit: AngleUnit): number {
-    switch (unit) {
-        case 'deg':
-            return degToRad(value);
-        case 'rad':
-            return value;
-        case 'turn':
-            return turnToRad(value);
-        case 'grad':
-            return gradToRad(value);
-        default: {
-            const exhaustiveCheck: never = unit;
-            throw new Error(`Unsupported angle unit: ${String(exhaustiveCheck)}`);
-        }
-    }
-}
-
-export function normalizeAngle(
-    value: number,
-    unit: AngleUnit,
-    digits = 6,
-): number {
-    return roundTo(normalizeAngleRad(toAngleRad(value, unit)), digits);
+    return roundTo(((value % tau) + tau) % tau, digits);
 }

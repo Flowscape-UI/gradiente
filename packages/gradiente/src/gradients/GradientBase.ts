@@ -59,8 +59,8 @@ export abstract class GradientBase<TConfig = unknown> implements IGradientBase<T
         return {
             type: this.type,
             isRepeating: this.isRepeating,
-            config: this.config,
-            stops: this.stops
+            config: this._cloneConfig(this.config),
+            stops: this._cloneStops(this.stops)
         };
     }
 
@@ -206,20 +206,12 @@ export abstract class GradientBase<TConfig = unknown> implements IGradientBase<T
         }
     }
 
-    private _cloneStops(stops: readonly GradientStop[]): GradientStop[] {
-        return stops.map((stop) => ({ ...stop }));
+    private _cloneStops(stops: GradientStop[]): GradientStop[] {
+        return structuredClone(stops);
     }
 
     private _cloneConfig(value: TConfig): TConfig {
-        if (typeof value !== 'object' || value === null) {
-            return value;
-        }
-
-        if (Array.isArray(value)) {
-            return [...value] as TConfig;
-        }
-
-        return { ...(value as Record<string, unknown>) } as TConfig;
+        return structuredClone(value);
     }
 
 
