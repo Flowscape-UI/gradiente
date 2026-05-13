@@ -43,7 +43,10 @@
     "playground:add-dev": "pnpm add -D --filter gradiente-playground",
     "playground:dev": "pnpm --filter gradiente-playground dev",
     "playground:build": "pnpm --filter gradiente-playground build",
-    "playground:preview": "pnpm --filter gradiente-playground preview"
+    "playground:preview": "pnpm --filter gradiente-playground preview",
+
+    "pages:build": "pnpm run docs:build && pnpm run playground:build && pnpm run playground:copy-to-docs",
+    "playground:copy-to-docs": "node scripts/copy-playground-to-docs.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
