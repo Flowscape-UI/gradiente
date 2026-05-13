@@ -49,6 +49,10 @@ function randomConic() {
 }
 
 export function randomGradient() {
-  const generators = [randomLinear, randomRadial, randomConic];
+  const generators = [
+    randomLinear,
+    // randomRadial,
+    // randomConic
+  ];
   return randItem(generators)();
 }
