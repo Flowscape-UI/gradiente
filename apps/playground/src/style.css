@@ -20,6 +20,13 @@
     padding: 0px;
 }
 
+html,
+body,
+button,
+input {
+    touch-action: manipulation;
+}
+
 body {
     padding: 0 16px 200px 16px;
     background-color: var(--bg-background);
@@ -96,7 +103,7 @@ header {
 }
 
 .reload-icon {
-        width: 20px;
+    width: 20px;
     height: 20px;
     mask-image: var(--icon-reload);
     -webkit-mask-image: var(--icon-reload);
@@ -186,6 +193,7 @@ header {
         width: 100%;
         min-width: 0;
         max-width: none;
+        font-size: 18px;
     }
 
     button {
