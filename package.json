@@ -45,7 +45,7 @@
     "playground:build": "pnpm --filter gradiente-playground build",
     "playground:preview": "pnpm --filter gradiente-playground preview",
 
-    "pages:build": "pnpm run docs:build && pnpm run playground:build && pnpm run playground:copy-to-docs",
+    "pages:build": "pnpm run build && pnpm run docs:build && pnpm run playground:build && pnpm run playground:copy-to-docs",
     "playground:copy-to-docs": "node scripts/copy-playground-to-docs.mjs"
   },
   "devDependencies": {
