@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { degToRad, GradientData, LinearGradient, LinearGradientConfig } from '../../src';
 
-describe.only('LinearGradient', () => {
+describe('LinearGradient', () => {
     const gradientConfig: GradientData<LinearGradientConfig> = {
         isRepeating: false,
         config: { angle: 0 },
