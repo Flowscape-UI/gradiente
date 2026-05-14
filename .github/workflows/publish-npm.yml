@@ -1,0 +1,49 @@
+name: Publish npm package
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish gradiente to npm
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: pnpm run install:gradiente -- --frozen-lockfile
+
+      - name: Build package
+        run: pnpm run build
+
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Typecheck package
+        run: pnpm run typecheck
+
+      - name: Verify package contents
+        run: pnpm run pack
+
+      - name: Publish package
+        run: pnpm run publish:gradiente

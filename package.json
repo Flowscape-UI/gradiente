@@ -31,6 +31,7 @@
     "add:pkg": "pnpm add",
     "add:pkg:dev": "pnpm add -D",
     
+    "install:gradiente": "pnpm install --filter gradiente",
     "add:gradiente": "pnpm add --filter gradiente",
     "add:gradiente:dev": "pnpm add -D --filter gradiente",
     
