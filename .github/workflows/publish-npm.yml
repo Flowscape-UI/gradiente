@@ -31,13 +31,13 @@ jobs:
           package-manager-cache: false
 
       - name: Install dependencies
-        run: pnpm run install:gradiente -- --frozen-lockfile
+        run: pnpm install --filter gradiente --frozen-lockfile
 
       - name: Build package
         run: pnpm run build
 
       - name: Run tests
-        run: pnpm run test
+        run: pnpm run test -- --run
 
       - name: Typecheck package
         run: pnpm run typecheck
