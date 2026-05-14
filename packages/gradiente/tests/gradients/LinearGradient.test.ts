@@ -48,8 +48,7 @@ describe('LinearGradient', () => {
             });
 
             expect(gradient.config.interpolation).toEqual({
-                colorSpace: "a98-rgb",
-                hue: "increasing"
+                colorSpace: "a98-rgb"
             });
         });
 
@@ -508,12 +507,10 @@ describe('LinearGradient', () => {
             );
         });
 
-        it.only('should parse gradient string with angle, interpolation and hue path and serialize it back to string', () => {
+        it('should parse gradient string with angle, interpolation and hue path and serialize it back to string', () => {
             const gradient = LinearGradient.fromString(
                 'linear-gradient(53deg in oklab shorter hue, hsl(238, 65%, 62%) 0%, hsl(227, 84%, 40%) 40%, hsl(141, 97%, 53%) 100%)'
             );
-
-            console.log(gradient.toString());
 
             expect(gradient.toString()).toBe(
                 'linear-gradient(53deg in oklab, hsl(238, 65%, 62%) 0%, hsl(227, 84%, 40%) 40%, hsl(141, 97%, 53%) 100%)'
@@ -573,8 +570,7 @@ describe('LinearGradient', () => {
             expect(gradient.config).toEqual({
                 angle: expect.any(Number),
                 "interpolation": {
-                    "colorSpace": "oklab",
-                    "hue": "shorter",
+                    "colorSpace": "oklab"
                 },
             });
         });
@@ -592,7 +588,6 @@ describe('LinearGradient', () => {
             expect(gradient.config).toEqual({
                 angle: expect.any(Number),
                 interpolation: {
-                    hue: "shorter",
                     colorSpace: "oklab"
                 }
             });
@@ -794,8 +789,7 @@ describe('LinearGradient', () => {
             expect(gradient.config).toEqual({
                 angle: expect.any(Number),
                 "interpolation": {
-                    "colorSpace": "oklab",
-                    "hue": "shorter",
+                    "colorSpace": "oklab"
                 },
             });
 

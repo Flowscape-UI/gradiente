@@ -50,7 +50,6 @@ export class LinearGradient extends GradientBase<LinearGradientConfig> {
         config.config.angle = normalizeAngleRad(config.config.angle);
         if (config.config.interpolation) {
             config.config.interpolation = LinearGradient._normalizeConfigInterpolation(config.config.interpolation);
-            console.log(config)
         }
         super(config);
     }
