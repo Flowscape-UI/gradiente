@@ -21,10 +21,21 @@
     "url": "https://github.com/Flowscape-UI/gradiente/issues"
   },
   "exports": {
-    ".": "./dist/index.mjs",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./global": {
+      "default": "./dist/gradiente.global.js"
+    },
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "browser": "./dist/index.js",
+  "unpkg": "./dist/gradiente.global.iife.js",
+  "jsdelivr": "./dist/gradiente.global.iife.js",
   "files": [
     "dist"
   ],

@@ -34,20 +34,37 @@ Parse CSS gradients → work with structured data → render anywhere.
 
 ```bash
 npm install gradiente
+bun add gradiente
+pnpm add gradiente
+yarn add gradiente
+
+# HTML - add this in your <head> or <body> tag
+<script src="https://cdn.jsdelivr.net/npm/gradiente/dist/gradiente.global.iife.js"></script>
 ```
 
 
 ## Example
+# Basic usage
 
 ```ts
 import { parse, transformTo } from "gradiente";
 
 const gradient = parse("linear-gradient(red, blue)");
-
 const css = transformTo("css", gradient);
 const canvas = transformTo("canvas", gradient);
 
 canvas.draw(ctx, 300, 300);
+```
+
+# Usage in plain HTML
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/gradiente/dist/gradiente.global.iife.js"></script>
+
+<script>
+  const gradient = gradiente.parse("linear-gradient(red, blue)");
+  console.log(gradient.toString());
+</script>
 ```
 
 The full documentation is published on [gradiente docs](https://flowscape-ui.github.io/gradiente/). Some quick entry points:

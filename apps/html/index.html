@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gradiente HTML Test</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 32px;
+        }
+        .box {
+            width: 360px;
+            height: 220px;
+            border: 2px solid #000;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        pre {
+            padding: 16px;
+            background: #f3f3f3;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gradiente HTML Test</h1>
+    <div id="box" class="box"></div>
+    <pre id="output"></pre>
+    <script src="../../packages/gradiente/dist/gradiente.global.iife.js"></script>
+    <script>
+        const source = "linear-gradient(90deg in oklch longer hue, red, blue)";
+        const gradient = gradiente.parse(source);
+        const css = gradiente.GradientTransformer.to("css", gradient);
+
+        document.getElementById("box").style.background = css;
+        document.getElementById("output").textContent = [
+            `window global exists: ${typeof gradiente !== "undefined"}`,
+            `source: ${source}`,
+            `toString(): ${gradient.toString()}`,
+            `css transformer: ${css}`,
+            `isGradient(): ${gradiente.isGradient(source)}`
+        ].join("\n");
+    </script>
+</body>
+</html>

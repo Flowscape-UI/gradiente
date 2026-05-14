@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "pnpm --filter gradiente build",
+    "pack": "pnpm --filter gradiente pack --dry-run",
     "dev": "pnpm --filter gradiente dev",
     "test": "pnpm --filter gradiente test",
     "typecheck": "pnpm --filter gradiente typecheck",
