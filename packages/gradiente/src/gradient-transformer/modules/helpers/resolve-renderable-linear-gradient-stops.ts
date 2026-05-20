@@ -7,7 +7,7 @@ import {
     fixupHueDecreasing,
     converter,
 } from "culori";
-import type { GradientInterpolation, GradientStop, LinearGradient } from "../../../gradients";
+import type { GradientInterpolation, GradientStop, IGradientBase, LinearGradient } from "../../../gradients";
 import type { GradientColorSpace, GradientHueInterpolation } from "../../../gradients/helpers";
 import { expandRepeatingStops } from "./expand-repeating-stops";
 
@@ -133,8 +133,8 @@ const DEFAULT_SAMPLE_COUNT = 64;
 const toRgb = converter("rgb");
 
 
-export function resolveRenderableLinearGradientStops(
-    gradient: LinearGradient,
+export function resolveRenderableGradientStops(
+    gradient: IGradientBase<any>,
     sampleCount: number = DEFAULT_SAMPLE_COUNT,
 ): GradientStop[] {
     const colorStops = getColorStopsWithPositions(gradient.stops);

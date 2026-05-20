@@ -1,7 +1,7 @@
 import { converter, formatRgb } from "culori";
 import type { GradientBase, GradientStop, LinearGradient } from "../../../gradients";
 import type { ICanvasPaintResult, IGradientTransformerModule } from "../types";
-import { resolveRenderableLinearGradientStops } from "../helpers";
+import { resolveRenderableGradientStops } from "../helpers";
 
 const toRgb = converter("rgb");
 
@@ -66,7 +66,7 @@ export class ModuleTransformerLinearGradientToCanvas implements IGradientTransfo
                 let endX = centerX + (dirX * lineLength) / 2;
                 let endY = centerY + (dirY * lineLength) / 2;
 
-                const renderStops = resolveRenderableLinearGradientStops(gradient);
+                const renderStops = resolveRenderableGradientStops(gradient);
                 const { min, max, stops } = getStopRange(renderStops);
 
                 let normalizedStops = stops;

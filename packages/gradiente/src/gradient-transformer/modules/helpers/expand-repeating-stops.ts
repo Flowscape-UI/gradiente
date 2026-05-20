@@ -59,7 +59,11 @@ function sampleRepeatingColorAtPosition(
     return sampleColorAtPosition(stops, localPosition);
 }
 
-export function expandRepeatingStops(stops: GradientStop[]): GradientStop[] {
+export function expandRepeatingStopsTo(
+    stops: GradientStop[],
+    from: number,
+    to: number,
+): GradientStop[] {
     const colorStops = stops
         .filter((stop) => stop.type === "color-stop" && stop.position != null)
         .sort((a, b) => a.position - b.position);
@@ -77,25 +81,24 @@ export function expandRepeatingStops(stops: GradientStop[]): GradientStop[] {
     }
 
     const result: Array<GradientStop & { _order: number }> = [];
-
     let order = 0;
 
     result.push({
         type: "color-stop",
         value: sampleRepeatingColorAtPosition(
             colorStops,
-            0,
+            from,
             firstPosition,
             period,
         ),
-        position: 0,
+        position: from,
         _order: order,
     });
 
     order += 1;
 
-    const startRepeat = Math.floor((0 - firstPosition) / period) - 1;
-    const endRepeat = Math.ceil((1 - firstPosition) / period) + 1;
+    const startRepeat = Math.floor((from - firstPosition) / period) - 1;
+    const endRepeat = Math.ceil((to - firstPosition) / period) + 1;
 
     for (
         let repeatIndex = startRepeat;
@@ -106,14 +109,17 @@ export function expandRepeatingStops(stops: GradientStop[]): GradientStop[] {
 
         for (const stop of colorStops) {
             const position = stop.position + offset;
-            if (position <= 0 || position >= 1) {
+
+            if (position <= from || position >= to) {
                 continue;
             }
+
             result.push({
                 ...stop,
                 position,
                 _order: order,
             });
+
             order += 1;
         }
     }
@@ -122,11 +128,11 @@ export function expandRepeatingStops(stops: GradientStop[]): GradientStop[] {
         type: "color-stop",
         value: sampleRepeatingColorAtPosition(
             colorStops,
-            1,
+            to,
             firstPosition,
             period,
         ),
-        position: 1,
+        position: to,
         _order: order,
     });
 
@@ -135,7 +141,35 @@ export function expandRepeatingStops(stops: GradientStop[]): GradientStop[] {
             if (a.position === b.position) {
                 return a._order - b._order;
             }
+
             return a.position - b.position;
         })
         .map(({ _order, ...stop }) => stop);
+}
+
+export function expandRepeatingStops(stops: GradientStop[]): GradientStop[] {
+    return expandRepeatingStopsTo(stops, 0, 1);
+}
+
+export function getMaxVisibleRadialT(
+    center: { x: number; y: number },
+    radii: { x: number; y: number },
+    width: number,
+    height: number,
+): number {
+    const corners = [
+        { x: 0, y: 0 },
+        { x: width, y: 0 },
+        { x: 0, y: height },
+        { x: width, y: height },
+    ];
+
+    return Math.max(
+        ...corners.map((corner) => {
+            const dx = (corner.x - center.x) / Math.max(radii.x, 0.0001);
+            const dy = (corner.y - center.y) / Math.max(radii.y, 0.0001);
+
+            return Math.sqrt(dx * dx + dy * dy);
+        }),
+    );
 }
