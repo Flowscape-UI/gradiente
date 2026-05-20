@@ -1,4 +1,16 @@
-import type { GradientPolarColorSpace } from "./helpers";
+import type {
+    GradientColorSpace,
+    GradientHueInterpolation,
+    GradientPolarColorSpace,
+} from "./helpers";
+
+
+export type GradientInterpolation = {
+    colorSpace: GradientColorSpace;
+    hue?: GradientHueInterpolation;
+};
+
+
 
 /**
  * Shared scalar units

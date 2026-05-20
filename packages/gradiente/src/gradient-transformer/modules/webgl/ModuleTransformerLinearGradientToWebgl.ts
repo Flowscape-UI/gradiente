@@ -1,11 +1,8 @@
 import { converter, interpolate, formatRgb } from "culori";
 import type { GradientBase, GradientStop, LinearGradient } from "../../../gradients";
 import type { IGradientTransformerModule } from "../types";
-import { resolveRenderableLinearGradientStops } from "../helpers";
-
-export interface IWebGLPaintResult {
-    draw(canvas: HTMLCanvasElement, width: number, height: number): void;
-}
+import { resolveRenderableGradientStops } from "../helpers";
+import type { IWebGLPaintResult } from "./types";
 
 const toRgb = converter("rgb");
 
@@ -305,7 +302,7 @@ export class ModuleTransformerLinearGradientToCanvasWebGL implements IGradientTr
                 let endY = centerY + (dirY * lineLength) / 2;
 
                 const sampleCount = getWebGLSampleCount(gradient, MAX_STOPS);
-                const renderStops = resolveRenderableLinearGradientStops(
+                const renderStops = resolveRenderableGradientStops(
                     gradient,
                     sampleCount,
                 );

@@ -23,10 +23,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
 
-    "update-patch:gradiente": "npm version patch --prefix packages/gradiente",
-    "update-minor:gradiente": "npm version minor --prefix packages/gradiente",
-    "update-major:gradiente": "npm version major --prefix packages/gradiente",
+    "update-patch:gradiente": "node scripts/release-gradiente.mjs patch",
+    "update-minor:gradiente": "node scripts/release-gradiente.mjs minor",
+    "update-major:gradiente": "node scripts/release-gradiente.mjs major",
     "publish:gradiente": "npm publish ./packages/gradiente",
+    "push-release:gradiente": "git push && git push --tags",
     
     "add:pkg": "pnpm add",
     "add:pkg:dev": "pnpm add -D",

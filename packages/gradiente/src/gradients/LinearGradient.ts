@@ -18,12 +18,7 @@ import {
     type GradientColorSpace,
     type GradientHueInterpolation
 } from "./helpers";
-
-
-export type GradientInterpolation = {
-    colorSpace: GradientColorSpace;
-    hue?: GradientHueInterpolation;
-};
+import type { GradientInterpolation } from "./types";
 
 export type LinearGradientConfig = {
     angle: number,

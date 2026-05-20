@@ -17,6 +17,7 @@ import {
     ModuleTransformerLinearGradientToCanvasWebGL,
 
     type IGradientTransformerModule,
+    ModuleTransformerRadialGradientToCanvasWebGL,
 } from "./modules";
 
 export class GradientTransformer {
@@ -92,6 +93,8 @@ export class GradientTransformer {
 
         // CanvasWebGL
         this.add(new ModuleTransformerLinearGradientToCanvasWebGL());
+        this.add(new ModuleTransformerRadialGradientToCanvasWebGL());
+        // this.add(new ModuleTransformerConicGradientToCanvasWebGL());
     }
 
     private static _getKey(target: string, gradientType: string): string {
