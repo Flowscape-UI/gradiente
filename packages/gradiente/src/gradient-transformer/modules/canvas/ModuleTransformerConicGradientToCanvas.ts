@@ -8,8 +8,14 @@ import type {
     GradientStop,
 } from "../../../gradients";
 import { degToRad, gradToRad, turnToRad } from "../../../utils";
-import type { ICanvasPaintResult, IGradientTransformerModule } from "../types";
+import type {
+    ICanvasPaintResult,
+    IGradientTransformerModule
+} from "../types";
+import { resolveRenderableGradientStops } from "../helpers";
 
+
+const CONIC_GRADIENT_SAMPLE_COUNT = 128;
 const toRgb = converter("rgb");
 
 type RgbaColor = {
@@ -44,7 +50,13 @@ export class ModuleTransformerConicGradientToCanvas
                 );
 
                 const from = this._toRad(gradient.config.from);
-                const stops = this._normalizeStops(gradient.stops);
+
+                const renderStops = resolveRenderableGradientStops(
+                    gradient,
+                    CONIC_GRADIENT_SAMPLE_COUNT,
+                );
+
+                const stops = this._normalizeStops(renderStops);
 
                 if (stops.length === 0) {
                     ctx.putImageData(imageData, 0, 0);

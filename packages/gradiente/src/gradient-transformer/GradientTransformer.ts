@@ -5,19 +5,21 @@ import {
 import {
     // CSS
     ModuleTransformerLinearGradientToCss,
-    ModuleTransformerConicGradientToCss,
     ModuleTransformerRadialGradientToCss,
+    ModuleTransformerConicGradientToCss,
 
     // Canvas 2D
-    ModuleTransformerConicGradientToCanvas,
     ModuleTransformerLinearGradientToCanvas,
     ModuleTransformerRadialGradientToCanvas,
+    ModuleTransformerConicGradientToCanvas,
 
     // Canvas WebGL
     ModuleTransformerLinearGradientToCanvasWebGL,
+    ModuleTransformerRadialGradientToCanvasWebGL,
+    ModuleTransformerConicGradientToCanvasWebGL,
+
 
     type IGradientTransformerModule,
-    ModuleTransformerRadialGradientToCanvasWebGL,
 } from "./modules";
 
 export class GradientTransformer {
@@ -94,7 +96,7 @@ export class GradientTransformer {
         // CanvasWebGL
         this.add(new ModuleTransformerLinearGradientToCanvasWebGL());
         this.add(new ModuleTransformerRadialGradientToCanvasWebGL());
-        // this.add(new ModuleTransformerConicGradientToCanvasWebGL());
+        this.add(new ModuleTransformerConicGradientToCanvasWebGL());
     }
 
     private static _getKey(target: string, gradientType: string): string {

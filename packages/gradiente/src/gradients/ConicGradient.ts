@@ -1,16 +1,21 @@
-import { parseStringToAbi, splitTopLevelByWhitespace, type GradientAbi } from "../abi";
+import {
+    parseStringToAbi,
+    splitTopLevelByWhitespace,
+    type GradientAbi,
+} from "../abi";
 import { GradientBase, type GradientData } from "./GradientBase";
 import type {
     GradientAngleUnit,
     GradientAngleValue,
-    GradientCommonConfig,
+    GradientInterpolation,
     GradientLengthPercentage,
     GradientPosition,
 } from "./types";
 
-export type ConicGradientConfig = GradientCommonConfig & {
+export type ConicGradientConfig = {
     from: GradientAngleValue;
     position: GradientPosition;
+    interpolation?: GradientInterpolation;
 };
 
 export class ConicGradient extends GradientBase<ConicGradientConfig> {
@@ -32,12 +37,9 @@ export class ConicGradient extends GradientBase<ConicGradientConfig> {
         const configStr = this._serializeConfig();
         const stops = this._serializeStopsCompact();
 
-        const parts = [
-            configStr,
-            ...stops
-        ].filter(Boolean);
+        const parts = [configStr, ...stops].filter(Boolean);
 
-        return `${functionName}(${parts.join(', ')})`;
+        return `${functionName}(${parts.join(", ")})`;
     }
 
     public static fromString(input: string): ConicGradient {
@@ -50,7 +52,9 @@ export class ConicGradient extends GradientBase<ConicGradientConfig> {
         }
 
         const configInput = abi.inputs.find((input) => input.type === "config");
-        const inputsWithoutConfig = abi.inputs.filter((input) => input.type !== "config");
+        const inputsWithoutConfig = abi.inputs.filter(
+            (input) => input.type !== "config",
+        );
 
         const config = this._parseConfig(configInput?.value);
         const stops = this._normalizeAbiInputsToStops(inputsWithoutConfig);
@@ -69,26 +73,17 @@ export class ConicGradient extends GradientBase<ConicGradientConfig> {
     private _serializeConfig(): string {
         const parts: string[] = [];
 
-        // from angle
-        const angle = this.config.from;
-        parts.push(`from ${angle.value}${angle.unit}`);
+        if (!this._isDefaultFrom(this.config.from)) {
+            const angle = this.config.from;
+            parts.push(`from ${angle.value}${angle.unit}`);
+        }
 
-        // position
-        parts.push(`at ${this._serializePosition(this.config.position)}`);
+        if (!this._isDefaultPosition(this.config.position)) {
+            parts.push(`at ${this._serializePosition(this.config.position)}`);
+        }
 
-        // interpolation (если есть)
-        if (this.config.interpolation) {
-            const i = this.config.interpolation;
-
-            if (i.kind === "rectangular") {
-                parts.push(`in ${i.space}`);
-            } else {
-                let str = `in ${i.space}`;
-                if (i.hueMethod) {
-                    str += ` ${i.hueMethod} hue`;
-                }
-                parts.push(str);
-            }
+        if (this.config.interpolation !== undefined) {
+            parts.push(this._serializeInterpolation(this.config.interpolation));
         }
 
         return parts.join(" ");
@@ -108,6 +103,29 @@ export class ConicGradient extends GradientBase<ConicGradientConfig> {
             return `${value.value}%`;
         }
         return `${value.value}${value.unit}`;
+    }
+
+
+    private _serializeInterpolation(interpolation: GradientInterpolation): string {
+        const { colorSpace, hue } = interpolation;
+
+        if (hue === undefined) {
+            return `in ${colorSpace}`;
+        }
+
+        return `in ${colorSpace} ${hue} hue`;
+    }
+
+    private _isDefaultFrom(from: GradientAngleValue): boolean {
+        return from.value === 0 && from.unit === "deg";
+    }
+
+    private _isDefaultPosition(position: GradientPosition): boolean {
+        return (
+            position.kind === "keywords" &&
+            position.x === "center" &&
+            position.y === "center"
+        );
     }
 
     private static _parseConfig(input?: string): ConicGradientConfig {
@@ -130,11 +148,28 @@ export class ConicGradient extends GradientBase<ConicGradientConfig> {
 
         const tokens = splitTopLevelByWhitespace(input);
 
+        const isLengthPercentage = (value: string | undefined): value is string => {
+            if (value === undefined) {
+                return false;
+            }
+
+            return (
+                value.endsWith("%") ||
+                /^-?\d*\.?\d+[a-zA-Z]+$/.test(value)
+            );
+        };
+
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
 
             if (token === "from") {
-                config.from = this._parseAngle(tokens[i + 1]);
+                const angleToken = tokens[i + 1];
+
+                if (angleToken === undefined) {
+                    throw new Error("Invalid conic-gradient config: missing angle after from");
+                }
+
+                config.from = this._parseAngle(angleToken);
                 i += 1;
                 continue;
             }
@@ -142,6 +177,55 @@ export class ConicGradient extends GradientBase<ConicGradientConfig> {
             if (token === "at") {
                 const xToken = tokens[i + 1];
                 const yToken = tokens[i + 2];
+
+                if (xToken === undefined) {
+                    throw new Error("Invalid conic-gradient config: missing position after at");
+                }
+
+                // at center
+                if (
+                    xToken === "center" &&
+                    (yToken === undefined || yToken === "in")
+                ) {
+                    config.position = {
+                        kind: "keywords",
+                        x: "center",
+                        y: "center",
+                    };
+
+                    i += 1;
+                    continue;
+                }
+
+                // at left / at right
+                if (
+                    (xToken === "left" || xToken === "right") &&
+                    (yToken === undefined || yToken === "in")
+                ) {
+                    config.position = {
+                        kind: "keywords",
+                        x: xToken,
+                        y: "center",
+                    };
+
+                    i += 1;
+                    continue;
+                }
+
+                // at top / at bottom
+                if (
+                    (xToken === "top" || xToken === "bottom") &&
+                    (yToken === undefined || yToken === "in")
+                ) {
+                    config.position = {
+                        kind: "keywords",
+                        x: "center",
+                        y: xToken,
+                    };
+
+                    i += 1;
+                    continue;
+                }
 
                 const isKeywordPosition =
                     (
@@ -161,55 +245,69 @@ export class ConicGradient extends GradientBase<ConicGradientConfig> {
                         x: xToken,
                         y: yToken,
                     };
-                } else {
+
+                    i += 2;
+                    continue;
+                }
+
+                if (isLengthPercentage(xToken) && isLengthPercentage(yToken)) {
                     config.position = {
                         kind: "values",
                         x: this._parseLengthPercentage(xToken),
                         y: this._parseLengthPercentage(yToken),
                     };
+
+                    i += 2;
+                    continue;
                 }
 
-                i += 2;
-                continue;
+                throw new Error(
+                    `Invalid conic-gradient position: ${xToken} ${yToken ?? ""}`,
+                );
             }
 
             if (token === "in") {
-                const space = tokens[i + 1];
-                const hueMethod = tokens[i + 2];
-                const hueKeyword = tokens[i + 3];
+                const colorSpace = tokens[i + 1];
+                const maybeHue = tokens[i + 2];
+                const maybeHueKeyword = tokens[i + 3];
+
+                if (colorSpace === undefined) {
+                    throw new Error("Invalid conic-gradient interpolation: missing color space");
+                }
 
                 if (
-                    hueKeyword === "hue" &&
+                    maybeHueKeyword === "hue" &&
                     (
-                        hueMethod === "shorter" ||
-                        hueMethod === "longer" ||
-                        hueMethod === "increasing" ||
-                        hueMethod === "decreasing"
+                        maybeHue === "shorter" ||
+                        maybeHue === "longer" ||
+                        maybeHue === "increasing" ||
+                        maybeHue === "decreasing"
                     )
                 ) {
                     config.interpolation = {
-                        kind: "polar",
-                        space,
-                        hueMethod,
-                    } as ConicGradientConfig["interpolation"];
+                        colorSpace: colorSpace as any,
+                        hue: maybeHue as any,
+                    };
 
                     i += 3;
                     continue;
                 }
 
                 config.interpolation = {
-                    kind: "rectangular",
-                    space,
-                } as ConicGradientConfig["interpolation"];
+                    colorSpace: colorSpace as any,
+                };
 
                 i += 1;
+                continue;
             }
         }
 
         return config;
     }
 
-    private static _parseLengthPercentage(input: string): GradientLengthPercentage {
+    private static _parseLengthPercentage(
+        input: string,
+    ): GradientLengthPercentage {
         if (input.endsWith("%")) {
             return {
                 kind: "percent",

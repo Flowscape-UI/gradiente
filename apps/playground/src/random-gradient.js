@@ -52,7 +52,7 @@ export function randomGradient() {
   const generators = [
     randomLinear,
     randomRadial,
-    // randomConic
+    randomConic
   ];
   return randItem(generators)();
 }

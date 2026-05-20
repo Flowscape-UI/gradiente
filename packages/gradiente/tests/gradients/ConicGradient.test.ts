@@ -150,9 +150,8 @@ describe("ConicGradient", () => {
                         y: "center",
                     },
                     interpolation: {
-                        kind: "polar",
-                        space: "oklch",
-                        hueMethod: "increasing",
+                        colorSpace: "oklch",
+                        hue: "increasing",
                     },
                 },
                 stops: [
@@ -248,7 +247,10 @@ describe("ConicGradient", () => {
                 functionName: "conic-gradient",
                 isRepeating: false,
                 inputs: [
-                    { type: "config", value: "from 45deg at center center in oklch increasing hue" },
+                    {
+                        type: "config",
+                        value: "from 45deg at center center in oklch increasing hue",
+                    },
                     { type: "color-stop", value: "red" },
                     { type: "color-stop", value: "blue" },
                 ],
@@ -266,9 +268,8 @@ describe("ConicGradient", () => {
                     y: "center",
                 },
                 interpolation: {
-                    kind: "polar",
-                    space: "oklch",
-                    hueMethod: "increasing",
+                    colorSpace: "oklch",
+                    hue: "increasing",
                 },
             });
         });
