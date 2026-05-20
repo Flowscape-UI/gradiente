@@ -7,7 +7,7 @@ import {
     fixupHueDecreasing,
     converter,
 } from "culori";
-import type { GradientInterpolation, GradientStop, IGradientBase, LinearGradient } from "../../../gradients";
+import type { GradientInterpolation, GradientStop, IGradientBase } from "../../../gradients";
 import type { GradientColorSpace, GradientHueInterpolation } from "../../../gradients/helpers";
 import { expandRepeatingStops } from "./expand-repeating-stops";
 
