@@ -1,22 +1,29 @@
 import {
     GradientFactory,
-    type GradientBase
+    type AnyGradient,
+    type GradientLike
 } from "../gradients";
 import {
     // CSS
     ModuleTransformerLinearGradientToCss,
     ModuleTransformerRadialGradientToCss,
+    ModuleTransformerDiamondGradientToCss,
     ModuleTransformerConicGradientToCss,
+    ModuleTransformerMeshGradientToCss,
 
     // Canvas 2D
     ModuleTransformerLinearGradientToCanvas,
     ModuleTransformerRadialGradientToCanvas,
+    ModuleTransformerDiamondGradientToCanvas,
     ModuleTransformerConicGradientToCanvas,
+    ModuleTransformerMeshGradientToCanvas,
 
     // Canvas WebGL
     ModuleTransformerLinearGradientToCanvasWebGL,
     ModuleTransformerRadialGradientToCanvasWebGL,
+    ModuleTransformerDiamondGradientToCanvasWebGL,
     ModuleTransformerConicGradientToCanvasWebGL,
+    ModuleTransformerMeshGradientToCanvasWebGL,
 
 
     type IGradientTransformerModule,
@@ -43,7 +50,7 @@ export class GradientTransformer {
 
     public static to<TOutput = unknown>(
         target: string,
-        input: string | GradientBase<any>,
+        input: string | GradientLike,
     ): TOutput {
         const gradient = typeof input === "string"
             ? GradientFactory.create(input)
@@ -57,14 +64,14 @@ export class GradientTransformer {
             );
         }
 
-        return module.to(gradient as GradientBase<any>) as TOutput;
+        return module.to(gradient) as TOutput;
     }
 
     public static from<TOutput = unknown>(
         target: string,
         gradientType: string,
         input: TOutput,
-    ): GradientBase<any> {
+    ): AnyGradient {
         const module = this.get(target, gradientType);
 
         if (!module || !module.from) {
@@ -73,7 +80,7 @@ export class GradientTransformer {
             );
         }
 
-        return module.from(input);
+        return module.from(input) as AnyGradient;
     }
 
     private static _ensureInitialized(): void {
@@ -86,17 +93,23 @@ export class GradientTransformer {
         // CSS
         this.add(new ModuleTransformerLinearGradientToCss());
         this.add(new ModuleTransformerRadialGradientToCss());
+        this.add(new ModuleTransformerDiamondGradientToCss());
         this.add(new ModuleTransformerConicGradientToCss());
+        this.add(new ModuleTransformerMeshGradientToCss());
 
         // Canvas2d
         this.add(new ModuleTransformerLinearGradientToCanvas());
         this.add(new ModuleTransformerRadialGradientToCanvas());
+        this.add(new ModuleTransformerDiamondGradientToCanvas());
         this.add(new ModuleTransformerConicGradientToCanvas());
+        this.add(new ModuleTransformerMeshGradientToCanvas());
 
         // CanvasWebGL
         this.add(new ModuleTransformerLinearGradientToCanvasWebGL());
         this.add(new ModuleTransformerRadialGradientToCanvasWebGL());
+        this.add(new ModuleTransformerDiamondGradientToCanvasWebGL());
         this.add(new ModuleTransformerConicGradientToCanvasWebGL());
+        this.add(new ModuleTransformerMeshGradientToCanvasWebGL());
     }
 
     private static _getKey(target: string, gradientType: string): string {

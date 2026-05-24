@@ -1,11 +1,11 @@
-import type { GradientBase } from "../../gradients";
+import type { GradientLike } from "../../gradients";
 
 export interface IGradientTransformerModule<TOutput = unknown> {
     readonly target: string;
     readonly gradientType: string;
 
-    to(input: GradientBase<any>): TOutput;
-    from?(input: TOutput): GradientBase<any>;
+    to(input: GradientLike): TOutput;
+    from?(input: TOutput): GradientLike;
 }
 
 export interface ICanvasPaintResult {

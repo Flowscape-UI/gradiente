@@ -4,6 +4,14 @@ import type { GradientStop } from "./types";
 
 export type GradientType = string;
 
+export interface GradientLike<TJSON = unknown> {
+    readonly type: GradientType;
+
+    clone(): this;
+    toString(): string;
+    toJSON(): TJSON & { type: GradientType };
+}
+
 export interface GradientData<TConfig = unknown> {
     isRepeating: boolean;
     config: TConfig;
@@ -11,15 +19,13 @@ export interface GradientData<TConfig = unknown> {
 }
 
 
-export interface IGradientBase<TConfig = unknown> {
+export interface IGradientBase<TConfig = unknown> extends GradientLike<GradientData<TConfig>> {
     readonly type: GradientType;
     readonly isRepeating: boolean;
     readonly config: TConfig;
     readonly stops: GradientStop[];
 
-    clone(): this;
-    toString(): string;
-    toJSON(): GradientData<TConfig>;
+    toJSON(): GradientData<TConfig> & { type: GradientType };
     addStop(stop: GradientStop): void;
     removeStop(index: number): void;
     equals(other: IGradientBase<TConfig>): boolean;

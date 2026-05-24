@@ -1,11 +1,13 @@
-import { parseStringToAbi, type GradientAbi } from "../abi";
+import { type GradientAbi } from "../abi";
 import { GradientTransformer } from "../gradient-transformer";
 import { ConicGradient } from "./ConicGradient";
-import { type IGradientBase, GradientBase } from "./GradientBase";
+import { DiamondGradient } from "./DiamondGradient";
+import { type GradientLike } from "./GradientBase";
 import { LinearGradient } from "./LinearGradient";
+import { MeshGradient } from "./MeshGradient";
 import { RadialGradient } from "./RadialGradient";
 
-export interface IGradientStatic<TGradient extends GradientBase = GradientBase> {
+export interface IGradientStatic<TGradient extends GradientLike = GradientLike> {
     fromAbi(abi: GradientAbi): TGradient;
     fromString(input: string): TGradient;
 }
@@ -28,18 +30,26 @@ export class GradientFactory {
         return this._registry.delete(functionName);
     }
 
-    public static create(input: string | GradientAbi): IGradientBase<any> {
-        const abi = typeof input === "string"
-            ? parseStringToAbi(input)
-            : input;
+    public static create(input: string | GradientAbi): AnyGradient {
+        if (typeof input === "string") {
+            const functionName = this._getFunctionName(input);
+            const adapter = this.get(functionName);
 
+            if (!adapter) {
+                throw new Error(`No gradient registered for: ${functionName}`);
+            }
+
+            return adapter.fromString(input) as AnyGradient;
+        }
+
+        const abi = input;
         const adapter = this.get(abi.functionName);
 
         if (!adapter) {
             throw new Error(`No gradient registered for: ${abi.functionName}`);
         }
 
-        return adapter.fromAbi(abi);
+        return adapter.fromAbi(abi) as AnyGradient;
     }
 
     public static isValid(input: string): boolean {
@@ -60,14 +70,35 @@ export class GradientFactory {
         this._initialized = true;
         this.add("linear-gradient", LinearGradient);
         this.add("radial-gradient", RadialGradient);
+        this.add("diamond-gradient", DiamondGradient);
         this.add("conic-gradient", ConicGradient);
+        this.add("mesh-gradient", MeshGradient);
+    }
+
+    private static _getFunctionName(input: string): string {
+        const source = input.trim();
+        const openIndex = source.indexOf("(");
+
+        if (openIndex <= 0) {
+            throw new Error("Expected function opening parenthesis");
+        }
+
+        let functionName = source.slice(0, openIndex).trim();
+
+        if (functionName.startsWith("repeating-")) {
+            functionName = functionName.slice("repeating-".length);
+        }
+
+        return functionName;
     }
 }
 
 export type AnyGradient =
     | LinearGradient
     | RadialGradient
-    | ConicGradient;
+    | DiamondGradient
+    | ConicGradient
+    | MeshGradient;
 
 export function parse(input: string): AnyGradient {
     return GradientFactory.create(input) as AnyGradient;
@@ -84,7 +115,7 @@ export function format(input: string | AnyGradient): string {
     return input.toString();
 }
 
-export function transformTo(target: string, input: string | GradientBase<any>) {
+export function transformTo(target: string, input: string | AnyGradient) {
     const gradient =
         typeof input === "string"
             ? parse(input)
@@ -97,6 +128,6 @@ export function transformFrom<TInput = unknown>(
     target: string,
     gradientType: string,
     input: TInput,
-): GradientBase<any> {
+): AnyGradient {
     return GradientTransformer.from(target, gradientType, input);
 }
