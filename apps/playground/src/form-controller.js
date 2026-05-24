@@ -59,6 +59,10 @@ export function setupFormController() {
                 ctx.clearRect(0, 0, drawArea.width, drawArea.height);
             }
         }
+
+        if (target?.startsWith("svg-") && drawArea instanceof SVGElement) {
+            clearSvgGradient(drawArea);
+        }
     }
 
     function applyToOriginalCss(container, source) {
@@ -116,6 +120,71 @@ export function setupFormController() {
         result.draw(canvas, canvas.width, canvas.height);
     }
 
+    function clearSvgGradient(svg) {
+        svg.querySelector('[data-gradiente-svg-defs="true"]')?.remove();
+        svg.querySelectorAll("[data-gradiente-svg-target]").forEach((element) => {
+            element.removeAttribute("data-gradiente-svg-target");
+            element.removeAttribute("fill");
+            element.removeAttribute("stroke");
+            element.style.removeProperty("fill");
+            element.style.removeProperty("stroke");
+        });
+    }
+
+    function applyToSvg(container, gradient, mode) {
+        const svg = container.querySelector("svg.draw-area");
+
+        if (!(svg instanceof SVGElement)) {
+            throw new Error("SVG draw area not found.");
+        }
+
+        const result = GradientTransformer.to("svg", gradient);
+        const template = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg",
+        );
+
+        template.innerHTML = result.defs;
+
+        const defs = template.querySelector("defs");
+
+        if (!defs) {
+            throw new Error("SVG transformer did not return defs.");
+        }
+
+        clearSvgGradient(svg);
+
+        defs.dataset.gradienteSvgDefs = "true";
+        svg.prepend(defs);
+
+        if (mode === "string") {
+            const path = svg.querySelector("path");
+
+            if (!path) {
+                throw new Error("SVG string path not found.");
+            }
+
+            path.setAttribute("stroke", result.url);
+            path.setAttribute("fill", "none");
+            path.style.stroke = result.url;
+            path.style.fill = "none";
+            path.setAttribute("data-gradiente-svg-target", "true");
+            return;
+        }
+
+        const shape = mode === "text"
+            ? svg.querySelector("text")
+            : svg.querySelector("rect");
+
+        if (!shape) {
+            throw new Error(`SVG ${mode} target not found.`);
+        }
+
+        shape.setAttribute("fill", result.url);
+        shape.style.fill = result.url;
+        shape.setAttribute("data-gradiente-svg-target", "true");
+    }
+
     function applyGradientToContainer(container, gradient) {
         const target = container.dataset.target;
 
@@ -136,6 +205,21 @@ export function setupFormController() {
 
         if (target === "canvasWebGL") {
             applyToWebGL(container, gradient);
+            return;
+        }
+
+        if (target === "svg-text") {
+            applyToSvg(container, gradient, "text");
+            return;
+        }
+
+        if (target === "svg-square") {
+            applyToSvg(container, gradient, "square");
+            return;
+        }
+
+        if (target === "svg-string") {
+            applyToSvg(container, gradient, "string");
             return;
         }
 

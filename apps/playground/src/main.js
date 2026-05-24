@@ -56,6 +56,66 @@ document.querySelector("#app").innerHTML = `
           <canvas class="draw-area canvas-webgl-area"></canvas>
         </div>
       </div>
+
+      <div class="container transformer-content">
+        <div class="gradient-container" data-target="svg-text">
+          <h2 class="title">Text SVG</h2>
+            <svg
+              class="draw-area"
+              data-svg-example="text"
+              viewBox="0 0 320 180"
+              role="img"
+              aria-label="SVG gradient text example"
+            >
+            <text
+              x="50%"
+              y="20%"
+              dominant-baseline="middle"
+              text-anchor="middle"
+              class="svg text"
+            >Gradiente</text>
+          </svg>
+        </div>
+        <div class="gradient-container" data-target="svg-square">
+          <h2 class="title">Square SVG</h2>
+          <svg
+            class="draw-area"
+            data-svg-example="square"
+            viewBox="0 0 320 180"
+            role="img"
+            aria-label="SVG gradient square example"
+          >
+            <rect
+              x="70"
+              y="0"
+              width="180"
+              height="180"
+              rx="8"
+              class="svg"
+            />
+          </svg>
+        </div>
+        <div class="gradient-container" data-target="svg-string">
+          <h2 class="title">String SVG</h2>
+          <svg
+            class="draw-area"
+            data-svg-example="string"
+            viewBox="0 0 320 180"
+            role="img"
+            aria-label="SVG gradient string example"
+          >
+            <path
+              class="svg svg-string"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="18"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M24 120 C 72 28, 118 154, 160 88 S 246 24, 296 104"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 `;

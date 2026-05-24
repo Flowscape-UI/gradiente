@@ -177,8 +177,23 @@ header {
         width: 100%;
         max-width: 736px;
     }
+
+    &.svg-content {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+        max-width: 880px;
+    }
 }
 
+.svg {
+    &.text {
+        font-size: 52px;
+        font-weight: 800;
+        letter-spacing: 0;
+    }
+}
 
 .form {
     position: fixed;

@@ -172,9 +172,9 @@ export function randomGradient() {
   const generators = [
     randomLinear,
     randomRadial,
+    randomConic,
     randomDiamond,
     randomMesh,
-    randomConic
   ];
   return randItem(generators)();
 }

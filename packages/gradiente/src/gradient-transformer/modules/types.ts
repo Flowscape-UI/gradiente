@@ -11,3 +11,13 @@ export interface IGradientTransformerModule<TOutput = unknown> {
 export interface ICanvasPaintResult {
     draw(ctx: CanvasRenderingContext2D, width: number, height: number): void;
 }
+
+export interface ISvgGradientResult {
+    id: string;
+    href: string;
+    url: string;
+    type: "linearGradient" | "radialGradient" | "pattern";
+    gradient: string;
+    defs: string;
+    svg: string;
+}

@@ -25,6 +25,13 @@ import {
     ModuleTransformerConicGradientToCanvasWebGL,
     ModuleTransformerMeshGradientToCanvasWebGL,
 
+    // SVG
+    ModuleTransformerLinearGradientToSvg,
+    ModuleTransformerRadialGradientToSvg,
+    ModuleTransformerConicGradientToSvg,
+    ModuleTransformerDiamondGradientToSvg,
+    ModuleTransformerMeshGradientToSvg,
+
 
     type IGradientTransformerModule,
 } from "./modules";
@@ -110,6 +117,13 @@ export class GradientTransformer {
         this.add(new ModuleTransformerDiamondGradientToCanvasWebGL());
         this.add(new ModuleTransformerConicGradientToCanvasWebGL());
         this.add(new ModuleTransformerMeshGradientToCanvasWebGL());
+
+        // SVG
+        this.add(new ModuleTransformerLinearGradientToSvg());
+        this.add(new ModuleTransformerRadialGradientToSvg());
+        this.add(new ModuleTransformerConicGradientToSvg());
+        this.add(new ModuleTransformerDiamondGradientToSvg());
+        this.add(new ModuleTransformerMeshGradientToSvg());
     }
 
     private static _getKey(target: string, gradientType: string): string {
