@@ -12,7 +12,8 @@ import type {
 } from "./types";
 import {
     GradientBase,
-    type GradientData
+    type GradientData,
+    type GradientType
 } from "./GradientBase";
 import { isGradientPolarColorSpace } from "./helpers";
 
@@ -69,7 +70,7 @@ export class RadialGradient extends GradientBase<RadialGradientConfig> {
             },
         }
     };
-    public readonly type = "radial-gradient";
+    public readonly type: GradientType = "radial-gradient";
 
 
     constructor(input: Partial<GradientData<RadialGradientConfig>>) {
@@ -226,7 +227,7 @@ export class RadialGradient extends GradientBase<RadialGradientConfig> {
         return `${value.value}${value.unit}`;
     }
 
-    private static _parseConfig(inputs: GradientAbiInput[]): RadialGradientConfig {
+    protected static _parseConfig(inputs: GradientAbiInput[]): RadialGradientConfig {
         let shape: RadialGradientShape = "ellipse";
         let size: RadialGradientSize = {
             kind: "extent",

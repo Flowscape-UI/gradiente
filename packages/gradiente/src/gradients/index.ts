@@ -3,5 +3,7 @@ export * from "./helpers";
 export * from "./GradientBase";
 export * from "./LinearGradient";
 export * from "./RadialGradient";
+export * from "./DiamondGradient";
 export * from "./ConicGradient";
+export * from "./MeshGradient";
 export * from "./GradientFactory";
