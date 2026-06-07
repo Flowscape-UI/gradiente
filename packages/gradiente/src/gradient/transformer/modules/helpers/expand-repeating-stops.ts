@@ -1,55 +1,11 @@
-import { formatRgb, interpolate } from "culori";
 import type { GradientStop } from "../../../kind/base";
-import { getRenderableColorStops } from "./color-stops";
+import {
+    getRenderableColorStops,
+    sampleColorStopAtPosition,
+} from "./color-stops";
 
 function positiveModulo(value: number, modulo: number): number {
     return ((value % modulo) + modulo) % modulo;
-}
-
-function sampleColorAtPosition(
-    stops: GradientStop[],
-    position: number,
-): string {
-    const colorStops = getRenderableColorStops(stops);
-
-    if (colorStops.length === 0) {
-        throw new Error("Cannot sample color from empty stops.");
-    }
-
-    if (position <= colorStops[0].position) {
-        return colorStops[0].value;
-    }
-
-    const lastStop = colorStops[colorStops.length - 1];
-
-    if (position >= lastStop.position) {
-        return lastStop.value;
-    }
-
-    for (let index = 0; index < colorStops.length - 1; index += 1) {
-        const current = colorStops[index];
-        const next = colorStops[index + 1];
-
-        if (position >= current.position && position <= next.position) {
-            const range = next.position - current.position || 1;
-            const localT = (position - current.position) / range;
-
-            const colorInterpolator = interpolate(
-                [current.value, next.value],
-                "rgb",
-            );
-
-            const formatted = formatRgb(colorInterpolator(localT));
-
-            if (formatted === undefined) {
-                throw new Error("Failed to format sampled color.");
-            }
-
-            return formatted;
-        }
-    }
-
-    return lastStop.value;
 }
 
 function sampleRepeatingColorAtPosition(
@@ -61,9 +17,13 @@ function sampleRepeatingColorAtPosition(
     const localPosition =
         firstPosition + positiveModulo(position - firstPosition, period);
 
-    return sampleColorAtPosition(stops, localPosition);
+    return sampleColorStopAtPosition(stops, localPosition);
 }
 
+/**
+ * RU: Раскрывает repeating stops в заданный видимый диапазон.
+ * EN: Expands repeating stops into a requested visible range.
+ */
 export function expandRepeatingStopsTo(
     stops: GradientStop[],
     from: number,
@@ -150,10 +110,18 @@ export function expandRepeatingStopsTo(
         .map(({ _order, ...stop }) => stop);
 }
 
+/**
+ * RU: Раскрывает repeating stops в стандартный диапазон 0..1.
+ * EN: Expands repeating stops into the default 0..1 range.
+ */
 export function expandRepeatingStops(stops: GradientStop[]): GradientStop[] {
     return expandRepeatingStopsTo(stops, 0, 1);
 }
 
+/**
+ * RU: Считает максимальный видимый параметр t для radial-gradient.
+ * EN: Computes the maximum visible t value for a radial-gradient.
+ */
 export function getMaxVisibleRadialT(
     center: { x: number; y: number },
     radii: { x: number; y: number },

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
     GradientConic,
     type GradientConicStop,
-} from "../../../src/gradient";
+} from "../../src/gradient";
 
 const defaultStops: GradientConicStop[] = [
     { type: "color-stop", value: "red", position: 0 },

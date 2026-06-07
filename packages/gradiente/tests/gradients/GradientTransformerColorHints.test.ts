@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { GradientLinear } from "../../../src/gradient";
-import { resolveRenderableGradientStops } from "../../../src/gradient/transformer/modules/helpers";
+import { GradientLinear } from "../../src/gradient";
+import { resolveRenderableGradientStops } from "../../src/gradient/transformer/modules/helpers";
 
 const HINTED_LINEAR_GRADIENT =
     "linear-gradient(to right in srgb, red 0%, 35%, blue 100%)";

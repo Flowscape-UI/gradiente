@@ -1,4 +1,3 @@
-import { converter } from "culori";
 import type {
     GradientInterpolation,
     GradientStop,
@@ -6,22 +5,23 @@ import type {
     IGradientWithStops,
 } from "../../../kind/base";
 import {
+    clamp01 as clamp01Value,
+    formatNumber,
     getRenderableColorStops,
+    mixRgbaByteColor,
+    parseColorToRgbaByte,
     type GradientRenderableColorStop,
+    type RgbaByteColor,
     resolveRenderableGradientStops,
 } from "../helpers";
+
+export { clamp01 } from "../helpers";
+export { encodeSvgDataUrl } from "../helpers";
 
 export const SVG_GRADIENT_SAMPLE_COUNT = 128;
 export const SVG_RASTER_SAMPLE_SIZE = 96;
 
-const toRgb = converter("rgb");
-
-export type SvgRgbaColor = {
-    r: number;
-    g: number;
-    b: number;
-    a: number;
-};
+export type SvgRgbaColor = RgbaByteColor;
 
 export function escapeXml(value: string): string {
     return value
@@ -31,16 +31,12 @@ export function escapeXml(value: string): string {
         .replaceAll('"', "&quot;");
 }
 
-export function clamp01(value: number): number {
-    return Math.min(1, Math.max(0, value));
-}
-
 export function toPercent(value: number): string {
     return `${Number((value * 100).toFixed(3))}%`;
 }
 
 export function formatPoint(value: number): string {
-    return `${Number(value.toFixed(3))}%`;
+    return `${formatNumber(value)}%`;
 }
 
 export function normalizeSvgStops(
@@ -50,18 +46,7 @@ export function normalizeSvgStops(
 }
 
 export function parseSvgColor(input: string): SvgRgbaColor {
-    const color = toRgb(input);
-
-    if (!color) {
-        throw new Error(`Failed to convert color: ${input}`);
-    }
-
-    return {
-        r: Math.round((color.r ?? 0) * 255),
-        g: Math.round((color.g ?? 0) * 255),
-        b: Math.round((color.b ?? 0) * 255),
-        a: Math.round((color.alpha ?? 1) * 255),
-    };
+    return parseColorToRgbaByte(input);
 }
 
 export function formatSvgColor(color: SvgRgbaColor): string {
@@ -77,12 +62,7 @@ export function mixSvgColor(
     to: SvgRgbaColor,
     t: number,
 ): SvgRgbaColor {
-    return {
-        r: Math.round(from.r + (to.r - from.r) * t),
-        g: Math.round(from.g + (to.g - from.g) * t),
-        b: Math.round(from.b + (to.b - from.b) * t),
-        a: Math.round(from.a + (to.a - from.a) * t),
-    };
+    return mixRgbaByteColor(from, to, t);
 }
 
 export function sampleSvgStops(
@@ -136,10 +116,6 @@ export function sampleSvgStops(
     return parseSvgColor(colorStops[colorStops.length - 1].value);
 }
 
-export function encodeSvgDataUrl(svg: string): string {
-    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
-
 export function buildSvgStops(
     gradient: IGradientWithStops<
         GradientStop,
@@ -150,7 +126,7 @@ export function buildSvgStops(
         resolveRenderableGradientStops(gradient, SVG_GRADIENT_SAMPLE_COUNT),
     )
         .map((stop) =>
-            `<stop offset="${toPercent(clamp01(stop.position))}" stop-color="${escapeXml(stop.value)}"/>`,
+            `<stop offset="${toPercent(clamp01Value(stop.position))}" stop-color="${escapeXml(stop.value)}"/>`,
         )
         .join("");
 }

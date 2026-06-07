@@ -1,7 +1,4 @@
 import type {
-    GradientLengthPercentage,
-} from "../../../kind/base";
-import type {
     GradientMesh,
     GradientMeshConfig,
     GradientMeshPatch,
@@ -13,6 +10,7 @@ import {
     toMeshRgbColor,
     type GradientMeshColorSampler,
 } from "../../../kind/mesh/mesh-sampler";
+import { resolveLengthPercentage } from "./geometry";
 
 export type MeshColor = [number, number, number, number];
 
@@ -37,21 +35,10 @@ export type MeshRenderContext = {
     sampler: GradientMeshColorSampler;
 };
 
-function resolveLengthPercentage(
-    value: GradientLengthPercentage,
-    reference: number,
-): number {
-    if (value.kind === "percent") {
-        return (value.value / 100) * reference;
-    }
-
-    if (value.unit === "px") {
-        return value.value;
-    }
-
-    throw new Error(`Unsupported mesh-gradient length unit: ${value.unit}`);
-}
-
+/**
+ * RU: Преобразует vertex из модели mesh-gradient в координаты и RGB-цвет рендера.
+ * EN: Converts a mesh-gradient model vertex into render coordinates and RGB color.
+ */
 export function resolveMeshVertex(
     vertex: GradientMeshVertex,
     width: number,
@@ -59,8 +46,12 @@ export function resolveMeshVertex(
 ): MeshRenderVertex {
     return {
         id: vertex.id,
-        x: resolveLengthPercentage(vertex.x, width),
-        y: resolveLengthPercentage(vertex.y, height),
+        x: resolveLengthPercentage(vertex.x, width, {
+            context: "mesh-gradient",
+        }),
+        y: resolveLengthPercentage(vertex.y, height, {
+            context: "mesh-gradient",
+        }),
         color: toMeshRgbColor(vertex.color),
     };
 }
@@ -78,6 +69,10 @@ function buildMeshVertexMapFromVertices(
     );
 }
 
+/**
+ * RU: Создает lookup-карту mesh-вершин по id.
+ * EN: Creates a lookup map of mesh vertices by id.
+ */
 export function buildMeshVertexMap(
     gradient: GradientMesh,
     width: number,
@@ -90,6 +85,10 @@ export function buildMeshVertexMap(
     );
 }
 
+/**
+ * RU: Строит регулярную сетку mesh-вершин по конфигу градиента.
+ * EN: Builds a regular mesh vertex grid from the gradient config.
+ */
 export function buildRegularMeshGrid(
     gradient: GradientMesh,
     vertexMap: Map<string, MeshRenderVertex>,
@@ -196,6 +195,10 @@ function buildRegularMeshGridFromVertexIds(
     return result;
 }
 
+/**
+ * RU: Подготавливает общий контекст mesh-рендера для Canvas, SVG, CSS и WebGL.
+ * EN: Prepares a shared mesh render context for Canvas, SVG, CSS, and WebGL.
+ */
 export function buildMeshRenderContext(
     gradient: GradientMesh,
     width: number,
@@ -257,6 +260,10 @@ function samplePatchColor(
     );
 }
 
+/**
+ * RU: Разбивает mesh patch на треугольники для текущего способа рендера.
+ * EN: Splits a mesh patch into triangles for the current renderer.
+ */
 export function buildPatchTriangles(
     sampler: GradientMeshColorSampler,
     patch: GradientMeshPatch,
@@ -388,6 +395,10 @@ function findPatchIdByVertices(
     return patchId;
 }
 
+/**
+ * RU: Строит внешние mesh-треугольники, которые закрывают края canvas/SVG области.
+ * EN: Builds outer mesh triangles that cover the edges of the canvas/SVG area.
+ */
 export function buildMeshEdgeSkirtTriangles(
     sampler: GradientMeshColorSampler,
     patches: GradientMeshPatch[],

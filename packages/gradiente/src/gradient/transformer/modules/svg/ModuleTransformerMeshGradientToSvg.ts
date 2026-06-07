@@ -3,7 +3,9 @@ import {
     buildMeshEdgeSkirtTriangles,
     buildMeshRenderContext,
     buildPatchTriangles,
-    type MeshRenderVertex,
+    formatNumber,
+    formatRgbaTupleAsCss,
+    getAverageMeshTriangleColor,
     type MeshTriangle,
 } from "../helpers";
 import { GradientTransformerModule } from "../GradientTransformerModule";
@@ -19,30 +21,17 @@ const MESH_VIEW_BOX_SIZE = 100;
 const BILINEAR_SUBDIVISIONS = 32;
 const BICUBIC_SUBDIVISIONS = 40;
 
-function formatRgba(color: [number, number, number, number]): string {
-    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${Number(color[3].toFixed(4))})`;
-}
-
-function getTriangleColor(
-    a: MeshRenderVertex,
-    b: MeshRenderVertex,
-    c: MeshRenderVertex,
-): [number, number, number, number] {
-    return [
-        Math.round(((a.color[0] + b.color[0] + c.color[0]) / 3) * 255),
-        Math.round(((a.color[1] + b.color[1] + c.color[1]) / 3) * 255),
-        Math.round(((a.color[2] + b.color[2] + c.color[2]) / 3) * 255),
-        (a.color[3] + b.color[3] + c.color[3]) / 3,
-    ];
-}
-
-function formatNumber(value: number): string {
-    return `${Number(value.toFixed(3))}`;
-}
-
 function triangleToPolygon(triangle: MeshTriangle): string {
     const [a, b, c] = triangle;
-    const color = formatRgba(getTriangleColor(a, b, c));
+    const average = getAverageMeshTriangleColor(triangle);
+    const color = formatRgbaTupleAsCss(
+        [
+            Math.round(average[0] * 255),
+            Math.round(average[1] * 255),
+            Math.round(average[2] * 255),
+            average[3],
+        ],
+    );
     const points = [
         `${formatNumber(a.x)} ${formatNumber(a.y)}`,
         `${formatNumber(b.x)} ${formatNumber(b.y)}`,

@@ -3,7 +3,7 @@ import {
     GradientMesh,
     type GradientMeshPatch,
     type GradientMeshVertex,
-} from "../../../src/gradient";
+} from "../../src/gradient";
 
 const defaultVertices: GradientMeshVertex[] = [
     {

@@ -6,6 +6,15 @@ import {
 } from "../helpers";
 import { GradientTransformerModule } from "../GradientTransformerModule";
 import { createWebGLProgram } from "./helpers";
+import {
+    WEBGL_MESH_FRAGMENT_SHADER,
+    WEBGL_MESH_VERTEX_SHADER,
+} from "./glsl";
+import {
+    bindWebGLAttribute,
+    drawWebGLTriangles,
+    prepareWebGLCanvas,
+} from "./runtime";
 import type { IWebGLPaintResult } from "./types";
 
 const BICUBIC_SUBDIVISIONS = 24;
@@ -32,38 +41,11 @@ extends GradientTransformerModule<GradientMesh, IWebGLPaintResult> {
     protected transform(gradient: GradientMesh): IWebGLPaintResult {
         return {
             draw: (canvas, width, height) => {
-                const gl = canvas.getContext("webgl");
-
-                if (!gl) {
-                    throw new Error("WebGL is not supported.");
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-                gl.viewport(0, 0, width, height);
-
-                const vertexSource = `
-                    attribute vec2 a_position;
-                    attribute vec4 a_color;
-                    varying vec4 v_color;
-
-                    void main() {
-                        v_color = a_color;
-                        gl_Position = vec4(a_position, 0.0, 1.0);
-                    }
-                `;
-                const fragmentSource = `
-                    precision mediump float;
-                    varying vec4 v_color;
-
-                    void main() {
-                        gl_FragColor = v_color;
-                    }
-                `;
+                const gl = prepareWebGLCanvas(canvas, width, height);
                 const program = createWebGLProgram(
                     gl,
-                    vertexSource,
-                    fragmentSource,
+                    WEBGL_MESH_VERTEX_SHADER,
+                    WEBGL_MESH_FRAGMENT_SHADER,
                 );
                 const { config, patches, vertexMap, grid, sampler } =
                     buildMeshRenderContext(gradient, width, height);
@@ -110,35 +92,22 @@ extends GradientTransformerModule<GradientMesh, IWebGLPaintResult> {
                     }
                 }
 
-                const positionBuffer = gl.createBuffer();
-                const colorBuffer = gl.createBuffer();
-
                 gl.useProgram(program);
-                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-                gl.bufferData(
-                    gl.ARRAY_BUFFER,
+                bindWebGLAttribute(
+                    gl,
+                    program,
+                    "a_position",
                     new Float32Array(positions),
-                    gl.STATIC_DRAW,
+                    2,
                 );
-
-                const positionLocation = gl.getAttribLocation(program, "a_position");
-                gl.enableVertexAttribArray(positionLocation);
-                gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-                gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-                gl.bufferData(
-                    gl.ARRAY_BUFFER,
+                bindWebGLAttribute(
+                    gl,
+                    program,
+                    "a_color",
                     new Float32Array(colors),
-                    gl.STATIC_DRAW,
+                    4,
                 );
-
-                const colorLocation = gl.getAttribLocation(program, "a_color");
-                gl.enableVertexAttribArray(colorLocation);
-                gl.vertexAttribPointer(colorLocation, 4, gl.FLOAT, false, 0, 0);
-
-                gl.clearColor(0, 0, 0, 0);
-                gl.clear(gl.COLOR_BUFFER_BIT);
-                gl.drawArrays(gl.TRIANGLES, 0, positions.length / 2);
+                drawWebGLTriangles(gl, positions.length / 2);
             },
         };
     }

@@ -5,7 +5,7 @@ import {
     GradientTransformer,
     ModuleTransformerLinearGradientToCss,
     type ISvgGradientResult,
-} from "../../../src/gradient";
+} from "../../src/gradient";
 
 const linearStops = [
     { type: "color-stop" as const, value: "red", position: 0 },

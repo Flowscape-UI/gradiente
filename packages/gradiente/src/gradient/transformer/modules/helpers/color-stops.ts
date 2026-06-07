@@ -6,12 +6,20 @@ export type GradientRenderableColorStop = Extract<
     { type: "color-stop" }
 >;
 
+/**
+ * RU: Проверяет, можно ли stop использовать для отрисовки.
+ * EN: Checks whether a stop can be used for rendering.
+ */
 export function isRenderableColorStop(
     stop: GradientStop,
 ): stop is GradientRenderableColorStop {
     return stop.type === "color-stop" && stop.position != null;
 }
 
+/**
+ * RU: Возвращает только отрисовываемые color stops, отсортированные по позиции.
+ * EN: Returns renderable color stops sorted by position.
+ */
 export function getRenderableColorStops(
     stops: GradientStop[],
 ): GradientRenderableColorStop[] {
@@ -20,10 +28,39 @@ export function getRenderableColorStops(
         .sort((a, b) => a.position - b.position);
 }
 
+/**
+ * RU: Считает количество color stops, пригодных для отрисовки.
+ * EN: Counts color stops that are suitable for rendering.
+ */
 export function getRenderableColorStopCount(stops: GradientStop[]): number {
     return getRenderableColorStops(stops).length;
 }
 
+/**
+ * RU: Возвращает min/max диапазон отрисовываемых stops.
+ * EN: Returns the min/max range of renderable stops.
+ */
+export function getRenderableStopRange(stops: GradientStop[]): {
+    min: number;
+    max: number;
+    stops: GradientRenderableColorStop[];
+} {
+    const colorStops = getRenderableColorStops(stops);
+
+    if (!colorStops.length) {
+        return { min: 0, max: 1, stops: [] };
+    }
+
+    const min = Math.min(...colorStops.map((stop) => stop.position));
+    const max = Math.max(...colorStops.map((stop) => stop.position));
+
+    return { min, max, stops: colorStops };
+}
+
+/**
+ * RU: Нормализует позиции stops в новый диапазон 0..1.
+ * EN: Normalizes stop positions into a new 0..1 range.
+ */
 export function normalizeRenderableStops(
     stops: GradientStop[],
     min: number,
@@ -37,6 +74,10 @@ export function normalizeRenderableStops(
     }));
 }
 
+/**
+ * RU: Семплирует цвет между stops в RGB-строку для промежуточной позиции.
+ * EN: Samples a color between stops as an RGB string for an intermediate position.
+ */
 export function sampleColorStopAtPosition(
     stops: GradientStop[],
     position: number,
@@ -81,6 +122,10 @@ export function sampleColorStopAtPosition(
     return lastStop.value;
 }
 
+/**
+ * RU: Уменьшает число stops до лимита, пересэмплируя цвета при необходимости.
+ * EN: Fits stops to a limit by resampling colors when needed.
+ */
 export function fitRenderableStopsToLimit(
     stops: GradientStop[],
     maxStops: number,

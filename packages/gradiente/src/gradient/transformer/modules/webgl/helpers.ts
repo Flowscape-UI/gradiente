@@ -1,13 +1,15 @@
-import { converter } from "culori";
 import type { GradientStop } from "../../../kind/base";
 import {
     fitRenderableStopsToLimit,
     getRenderableColorStopCount,
+    parseColorToRgbaByte,
     type GradientRenderableColorStop,
 } from "../helpers";
 
-const toRgb = converter("rgb");
-
+/**
+ * RU: Создает и компилирует WebGL shader с подробной ошибкой компиляции.
+ * EN: Creates and compiles a WebGL shader with a detailed compile error.
+ */
 export function createWebGLShader(
     gl: WebGLRenderingContext,
     type: number,
@@ -32,6 +34,10 @@ export function createWebGLShader(
     return shader;
 }
 
+/**
+ * RU: Создает WebGL program из vertex/fragment shader source.
+ * EN: Creates a WebGL program from vertex/fragment shader source.
+ */
 export function createWebGLProgram(
     gl: WebGLRenderingContext,
     vertexSource: string,
@@ -63,21 +69,25 @@ export function createWebGLProgram(
     return program;
 }
 
+/**
+ * RU: Преобразует CSS-цвет в WebGL vec4 с каналами 0..1.
+ * EN: Converts a CSS color into a WebGL vec4 with 0..1 channels.
+ */
 export function toWebGLColor(input: string): [number, number, number, number] {
-    const color = toRgb(input);
-
-    if (!color) {
-        throw new Error(`Failed to convert color: ${input}`);
-    }
+    const color = parseColorToRgbaByte(input);
 
     return [
-        color.r ?? 0,
-        color.g ?? 0,
-        color.b ?? 0,
-        color.alpha ?? 1,
+        color.r / 255,
+        color.g / 255,
+        color.b / 255,
+        color.a / 255,
     ];
 }
 
+/**
+ * RU: Подбирает количество samples на segment так, чтобы уложиться в лимит uniforms.
+ * EN: Picks per-segment sample count so the result fits the uniform limit.
+ */
 export function getWebGLSampleCount(
     stops: GradientStop[],
     maxStops: number,
@@ -88,6 +98,10 @@ export function getWebGLSampleCount(
     return Math.max(2, Math.floor((maxStops - 1) / segmentCount));
 }
 
+/**
+ * RU: Уменьшает stops до WebGL-лимита, пересэмплируя цвета при необходимости.
+ * EN: Fits stops to the WebGL limit by resampling colors when necessary.
+ */
 export function fitStopsToWebGLLimit(
     stops: GradientStop[],
     maxStops: number,

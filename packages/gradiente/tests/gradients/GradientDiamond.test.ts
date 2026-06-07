@@ -3,7 +3,7 @@ import {
     GradientDiamond,
     GradientRadial,
     type GradientDiamondStop,
-} from "../../../src/gradient";
+} from "../../src/gradient";
 
 const defaultStops: GradientDiamondStop[] = [
     { type: "color-stop", value: "red", position: 0 },

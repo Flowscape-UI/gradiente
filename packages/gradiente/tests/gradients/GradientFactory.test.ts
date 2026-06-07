@@ -8,7 +8,7 @@ import {
     parse,
     transformTo,
     type ISvgGradientResult,
-} from "../../../src/gradient";
+} from "../../src/gradient";
 
 describe("GradientFactory", () => {
     it("parses built-in gradient strings through the public API", () => {

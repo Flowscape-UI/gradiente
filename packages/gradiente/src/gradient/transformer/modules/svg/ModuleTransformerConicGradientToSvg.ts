@@ -1,11 +1,11 @@
-import {
-    type GradientAngleValue,
-    type GradientLengthPercentage,
-    type GradientPosition,
-} from "../../../kind/base";
 import { GradientConic } from "../../../kind/conic";
-import { degToRad, gradToRad, turnToRad } from "../../../../utils";
-import { resolveRenderableGradientStops } from "../helpers";
+import {
+    formatNumber,
+    getEuclideanDistance,
+    resolveAngleToRadians,
+    resolveGradientPosition,
+    resolveRenderableGradientStops,
+} from "../helpers";
 import { GradientTransformerModule } from "../GradientTransformerModule";
 import type { ISvgGradientResult } from "../types";
 import {
@@ -22,70 +22,6 @@ const TWO_PI = Math.PI * 2;
 const VIEW_BOX_SIZE = 100;
 const CONIC_SEGMENT_COUNT = 720;
 
-function resolveKeywordX(value: "left" | "center" | "right", size: number): number {
-    if (value === "left") return 0;
-    if (value === "right") return size;
-
-    return size / 2;
-}
-
-function resolveKeywordY(value: "top" | "center" | "bottom", size: number): number {
-    if (value === "top") return 0;
-    if (value === "bottom") return size;
-
-    return size / 2;
-}
-
-function resolveLengthPercentage(
-    value: GradientLengthPercentage,
-    size: number,
-): number {
-    if (value.kind === "percent") {
-        return (value.value / 100) * size;
-    }
-
-    if (value.unit === "px") {
-        return value.value;
-    }
-
-    return value.value;
-}
-
-function resolveCenter(
-    position: GradientPosition,
-    size: number,
-): { x: number; y: number } {
-    if (position.kind === "keywords") {
-        return {
-            x: resolveKeywordX(position.x, size),
-            y: resolveKeywordY(position.y, size),
-        };
-    }
-
-    return {
-        x: resolveLengthPercentage(position.x, size),
-        y: resolveLengthPercentage(position.y, size),
-    };
-}
-
-function resolveAngleToRadians(angle: GradientAngleValue): number {
-    if (angle.unit === "deg") return degToRad(angle.value);
-    if (angle.unit === "turn") return turnToRad(angle.value);
-    if (angle.unit === "grad") return gradToRad(angle.value);
-
-    return angle.value;
-}
-
-function getDistance(
-    from: { x: number; y: number },
-    to: { x: number; y: number },
-): number {
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
-
-    return Math.sqrt(dx * dx + dy * dy);
-}
-
 function getCoverRadius(center: { x: number; y: number }): number {
     const corners = [
         { x: 0, y: 0 },
@@ -94,7 +30,9 @@ function getCoverRadius(center: { x: number; y: number }): number {
         { x: VIEW_BOX_SIZE, y: VIEW_BOX_SIZE },
     ];
 
-    return Math.max(...corners.map((corner) => getDistance(center, corner))) * 1.02;
+    return Math.max(...corners.map((corner) =>
+        getEuclideanDistance(center, corner),
+    )) * 1.02;
 }
 
 function pointOnConicRay(
@@ -106,10 +44,6 @@ function pointOnConicRay(
         x: center.x + Math.sin(angle) * radius,
         y: center.y - Math.cos(angle) * radius,
     };
-}
-
-function formatNumber(value: number): string {
-    return `${Number(value.toFixed(3))}`;
 }
 
 export class ModuleTransformerConicGradientToSvg
@@ -126,7 +60,15 @@ extends GradientTransformerModule<GradientConic, ISvgGradientResult> {
     protected transform(gradientValue: GradientConic): ISvgGradientResult {
         const config = gradientValue.getConfig();
         const id = DEFAULT_ID;
-        const center = resolveCenter(config.position, VIEW_BOX_SIZE);
+        const center = resolveGradientPosition(
+            config.position,
+            VIEW_BOX_SIZE,
+            VIEW_BOX_SIZE,
+            {
+                context: "SVG conic gradient",
+                allowUnsupportedUnitAsRaw: true,
+            },
+        );
         const from = resolveAngleToRadians(config.from);
         const stops = resolveRenderableGradientStops(
             gradientValue,

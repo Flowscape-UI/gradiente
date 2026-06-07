@@ -275,6 +275,13 @@ const DEFAULT_SAMPLE_COUNT = 64;
 const toRgb = converter("rgb");
 
 
+/**
+ * RU: Преобразует stops градиента в набор stops, который можно прямо отрисовать.
+ * Учитывает color hints, repeating и выбранное пространство интерполяции.
+ *
+ * EN: Converts gradient stops into stops that renderers can draw directly.
+ * Handles color hints, repeating gradients, and the selected interpolation space.
+ */
 export function resolveRenderableGradientStops(
     gradient: IGradientWithStops<
         GradientStop,

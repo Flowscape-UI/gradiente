@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { degToRad, normalizeAngleRad } from "../../../src/utils";
-import { GradientLinear, type GradientLinearStop } from "../../../src/gradient";
+import { degToRad, normalizeAngleRad } from "../../src/utils";
+import { GradientLinear, type GradientLinearStop } from "../../src/gradient";
 
 const defaultStops: GradientLinearStop[] = [
     { type: "color-stop", value: "red", position: 0 },

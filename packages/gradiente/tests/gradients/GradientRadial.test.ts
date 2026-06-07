@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
     GradientRadial,
     type GradientRadialStop,
-} from "../../../src/gradient";
+} from "../../src/gradient";
 
 const defaultStops: GradientRadialStop[] = [
     { type: "color-stop", value: "red", position: 0 },
