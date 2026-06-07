@@ -13,7 +13,7 @@
     "preview": "vitepress preview ."
   },
   "dependencies": {
-    "gradiente": "^2.0.0"
+    "gradiente": "workspace:*"
   },
   "devDependencies": {
     "@codemirror/basic-setup": "^0.20.0",

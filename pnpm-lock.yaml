@@ -24,8 +24,8 @@ importers:
   apps/docs:
     dependencies:
       gradiente:
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: workspace:*
+        version: link:../../packages/gradiente
     devDependencies:
       '@codemirror/basic-setup':
         specifier: ^0.20.0
@@ -1640,9 +1640,6 @@ packages:
   glob-parent@6.0.2:
     resolution: {integrity: sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A==}
     engines: {node: '>=10.13.0'}
-
-  gradiente@2.0.0:
-    resolution: {integrity: sha512-UgbyslQydD+gri6JTbPQqAbWhgr2CcaIS5DiVeFSKVRPE9Nz+MpFzfAXhEiapetpBhMsSieXiVdEMDZQxAVOvA==}
 
   hast-util-to-html@9.0.5:
     resolution: {integrity: sha512-OguPdidb+fbHQSU4Q4ZiLKnzWo8Wwsf5bZfbvu7//a9oTYoqD/fWpe96NuHkoS9h0ccGOTe0C4NGXdtS0iObOw==}
@@ -3735,10 +3732,6 @@ snapshots:
   glob-parent@6.0.2:
     dependencies:
       is-glob: 4.0.3
-
-  gradiente@2.0.0:
-    dependencies:
-      culori: 4.0.2
 
   hast-util-to-html@9.0.5:
     dependencies:

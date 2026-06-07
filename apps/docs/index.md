@@ -87,7 +87,9 @@ features:
 </div>
 
 
-<GradienteFlow />
+<ClientOnly>
+  <GradienteFlow />
+</ClientOnly>
 
 <br /><br />
 

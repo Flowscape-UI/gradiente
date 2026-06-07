@@ -24,9 +24,9 @@ Examples:
 
 ```txt
 css
-canvas
-konva (future)
-pixi (future)
+canvas-2d
+canvas-webgl
+svg
 ```
 
 
@@ -47,7 +47,7 @@ linear-gradient(red, blue)
 
 ```ts
 const paint = transformTo(
-  'canvas',
+  'canvas-2d',
   'linear-gradient(red, blue)'
 )
 
