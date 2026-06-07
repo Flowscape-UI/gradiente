@@ -1,10 +1,22 @@
 import { defineConfig } from 'vitepress';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "gradiente",
   description: "Lightweight gradient toolkit for modern rendering systems.",
   base: '/gradiente/',
+
+  vite: {
+    resolve: {
+      alias: {
+        gradiente: resolve(rootDir, "packages/gradiente/src/index.ts"),
+      },
+    },
+  },
 
   head: [
     // 1. Main icons
@@ -65,6 +77,17 @@ export default defineConfig({
             items: [
               { text: 'Introduction', link: '/core-api/intro' },
               { text: 'Working with gradients', link: '/core-api/working-with-gradients' },
+              {
+                text: 'Gradient Types',
+                items: [
+                  { text: 'Overview', link: '/core-api/gradients/' },
+                  { text: 'Linear', link: '/core-api/gradients/linear' },
+                  { text: 'Radial', link: '/core-api/gradients/radial' },
+                  { text: 'Diamond', link: '/core-api/gradients/diamond' },
+                  { text: 'Conic', link: '/core-api/gradients/conic' },
+                  { text: 'Mesh', link: '/core-api/gradients/mesh' },
+                ],
+              },
               { text: 'Transformers', link: '/core-api/transformers' },
               { text: 'Custom Transformers', link: '/core-api/custom-transformers' },
               { text: 'Custom Gradients', link: '/core-api/custom-gradients' },
@@ -121,6 +144,17 @@ export default defineConfig({
             items: [
               { text: 'Введение', link: '/ru/core-api/intro' },
               { text: 'Объект градиента', link: '/ru/core-api/working-with-gradients' },
+              {
+                text: 'Типы градиентов',
+                items: [
+                  { text: 'Обзор', link: '/ru/core-api/gradients/' },
+                  { text: 'Linear', link: '/ru/core-api/gradients/linear' },
+                  { text: 'Radial', link: '/ru/core-api/gradients/radial' },
+                  { text: 'Diamond', link: '/ru/core-api/gradients/diamond' },
+                  { text: 'Conic', link: '/ru/core-api/gradients/conic' },
+                  { text: 'Mesh', link: '/ru/core-api/gradients/mesh' },
+                ],
+              },
               { text: 'Трансформеры', link: '/ru/core-api/transformers' },
               { text: 'Кастомные трансформеры', link: '/ru/core-api/custom-transformers' },
               { text: 'Кастомные градиенты', link: '/ru/core-api/custom-gradients' },

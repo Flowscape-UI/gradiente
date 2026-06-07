@@ -57,12 +57,12 @@ Examples of targets:
 
 ```txt
 css
-canvas
-konva
-pixi
+canvas-2d
+canvas-webgl
+svg
 ```
 
-Some targets may be planned or custom.
+Custom targets can be registered through transformer modules.
 
 ## transformFrom
 

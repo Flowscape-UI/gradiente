@@ -170,12 +170,12 @@ gradient.addStop({
   position: 0.5
 })
 
-console.log(gradient.stops)
 // [
 //   { type: "color-stop", value: "red", position: 0 },
 //   { type: "color-stop", value: "blue", position: 1 },
 //   { type: "color-hint", value: "50%", position: 0.5 }
 // ]
+console.log(gradient.stops)
 ```
 
 A `color-hint` is not a color stop.
@@ -197,8 +197,8 @@ gradient.removeStop(1)
 // ]
 console.log(gradient.stops)
 
-console.log(gradient.toString())
 // "linear-gradient(red, blue)"
+console.log(gradient.toString())
 ```
 
 `removeStop(index)` removes a stop by array index.
@@ -214,8 +214,8 @@ const input = 'linear-gradient(red, blue)'
 if (isGradient(input)) {
   const gradient = parse(input)
 
-  console.log(gradient.toString())
   // "linear-gradient(red, blue)"
+  console.log(gradient.toString())
 }
 ```
 
@@ -232,9 +232,9 @@ try {
 
   console.log(gradient)
 } catch (error) {
-  console.log(error instanceof Error ? error.message : 'Invalid gradient')
   // Example:
   // "No gradient registered for: not-a-gradient"
+  console.log(error instanceof Error ? error.message : 'Invalid gradient')
 }
 ```
 
@@ -301,7 +301,7 @@ console.log(css)
 import { transformTo } from 'gradiente'
 
 const paint = transformTo(
-  'canvas',
+  'canvas-2d',
   'linear-gradient(to right, red, blue)'
 )
 
@@ -330,7 +330,7 @@ const canvas = document.querySelector('canvas')!
 const ctx = canvas.getContext('2d')!
 
 const paint = transformTo(
-  'canvas',
+  'canvas-2d',
   'linear-gradient(45deg, red, blue)'
 )
 paint.draw(ctx, canvas.width, canvas.height)
@@ -571,7 +571,7 @@ if (isGradient(input)) {
 
   const normalized = format(gradient)
   const css = transformTo<string>('css', gradient)
-  const canvasPaint = transformTo('canvas', gradient)
+  const canvasPaint = transformTo('canvas-2d', gradient)
 
   // "linear-gradient(to right, red, blue, green 50%)"
   console.log(normalized)
@@ -605,7 +605,7 @@ Export to other systems:
 
 ```ts
 transformTo('css', gradient)
-transformTo('canvas', gradient)
+transformTo('canvas-2d', gradient)
 ```
 
 Extend when needed:

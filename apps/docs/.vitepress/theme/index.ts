@@ -5,6 +5,7 @@ import '@vue-flow/core/dist/theme-default.css';
 import './custom.css';
 
 import GradienteFlow from './components/gradiente-flow.vue';
+import GradientPreview from './components/gradient-preview.vue';
 import DSLPlayground from './components/playground/dsl.vue';
 
 export default {
@@ -12,5 +13,6 @@ export default {
   enhanceApp({ app }) {
     app.component('DSLPlayground', DSLPlayground);
     app.component('GradienteFlow', GradienteFlow);
+    app.component('GradientPreview', GradientPreview);
   }
 } satisfies Theme

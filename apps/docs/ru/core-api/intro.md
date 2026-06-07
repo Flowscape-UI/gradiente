@@ -56,9 +56,9 @@ const css = transformTo('css', 'linear-gradient(to right, red, blue)')
 Примеры:
 ```txt
 css
-canvas
-konva
-pixi
+canvas-2d
+canvas-webgl
+svg
 ```
 
 Некоторые будут добавлены в будущих релизах или сделаны под ключ для своих целей
