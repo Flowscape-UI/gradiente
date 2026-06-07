@@ -1,5 +1,6 @@
 import {
-    GradientTransformer,
+    parse,
+    transformTo,
 } from "gradiente";
 import { randomGradient } from "./random-gradient";
 
@@ -91,7 +92,7 @@ export function setupFormController() {
         }
 
         try {
-            return GradientTransformer.to("css", source);
+            return transformTo("css", source);
         } catch {
             return source;
         }
@@ -150,6 +151,19 @@ export function setupFormController() {
         return error instanceof Error
             ? error.message
             : String(error);
+    }
+
+    function parseGradientSource(source) {
+        try {
+            const gradient = parse(source);
+
+            return {
+                gradient,
+                source: gradient.toString(),
+            };
+        } catch (error) {
+            return { error };
+        }
     }
 
     function setContainerError(container, message = "") {
@@ -214,7 +228,7 @@ export function setupFormController() {
         if (!context.transforms.has(target)) {
             context.transforms.set(
                 target,
-                GradientTransformer.to(target, context.source),
+                transformTo(target, context.gradient),
             );
         }
 
@@ -423,8 +437,22 @@ export function setupFormController() {
             return;
         }
 
+        const parsed = parseGradientSource(source);
+
+        if (parsed.error) {
+            containers.forEach((container) => {
+                clearTarget(container);
+                setContainerError(container, getErrorMessage(parsed.error));
+            });
+            console.error("Invalid gradient:", parsed.error);
+            return;
+        }
+
+        input.value = parsed.source;
+
         const context = {
-            source,
+            source: parsed.source,
+            gradient: parsed.gradient,
             transforms: new Map(),
         };
 
@@ -447,7 +475,7 @@ export function setupFormController() {
         });
 
         if (shouldRecord && canRecordHistory(context)) {
-            pushHistory(source, context);
+            pushHistory(parsed.source, context);
         }
     }
 

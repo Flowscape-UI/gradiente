@@ -1,8 +1,10 @@
-import { GradientConic } from "../kind/conic";
-import { GradientDiamond } from "../kind/diamond";
-import { GradientLinear } from "../kind/linear";
-import { GradientMesh } from "../kind/mesh";
-import { GradientRadial } from "../kind/radial";
+import {
+    parse,
+    type BuiltInGradientFunctionName,
+    type GradientByFunctionName,
+    type GradientTransformOutputByTarget,
+    type GradientTransformTarget,
+} from "../kind";
 import {
     // CSS
     ModuleTransformerLinearGradientToCss,
@@ -61,7 +63,7 @@ export class GradientTransformer {
         input: string | AnyGradient,
     ): TOutput {
         const gradient = typeof input === "string"
-            ? this._createGradient(input)
+            ? parse(input)
             : input;
 
         const module = this.get(target, gradient.type);
@@ -130,38 +132,39 @@ export class GradientTransformer {
     private static _getKey(target: string, gradientType: string): string {
         return `${target}:${gradientType}`;
     }
+}
 
-    private static _createGradient(input: string): AnyGradient {
-        const functionName = this._readFunctionName(input);
 
-        switch (functionName) {
-            case "linear-gradient":
-                return GradientLinear.fromString(input);
-            case "radial-gradient":
-                return GradientRadial.fromString(input);
-            case "diamond-gradient":
-                return GradientDiamond.fromString(input);
-            case "conic-gradient":
-                return GradientConic.fromString(input);
-            case "mesh-gradient":
-                return GradientMesh.fromString(input);
-            default:
-                throw new Error(`Unsupported gradient function: "${functionName}"`);
-        }
-    }
 
-    private static _readFunctionName(input: string): string {
-        const source = input.trim();
-        const openIndex = source.indexOf("(");
+export function transformTo<TTarget extends GradientTransformTarget>(
+    target: TTarget,
+    input: string | AnyGradient,
+): GradientTransformOutputByTarget[TTarget];
+export function transformTo<TOutput = unknown>(
+    target: string,
+    input: string | AnyGradient,
+): TOutput;
+export function transformTo<TOutput = unknown>(
+    target: string,
+    input: string | AnyGradient,
+): TOutput {
+    return GradientTransformer.to<TOutput>(target, input);
+}
 
-        if (openIndex <= 0) {
-            throw new Error("Expected gradient function call");
-        }
-
-        const functionName = source.slice(0, openIndex).trim();
-
-        return functionName.startsWith("repeating-")
-            ? functionName.slice("repeating-".length)
-            : functionName;
-    }
+export function transformFrom<TFunctionName extends BuiltInGradientFunctionName>(
+    target: string,
+    gradientType: TFunctionName,
+    input: unknown,
+): GradientByFunctionName[TFunctionName];
+export function transformFrom<TInput = unknown>(
+    target: string,
+    gradientType: string,
+    input: TInput,
+): AnyGradient;
+export function transformFrom<TInput = unknown>(
+    target: string,
+    gradientType: string,
+    input: TInput,
+): AnyGradient {
+    return GradientTransformer.from<TInput>(target, gradientType, input);
 }

@@ -5,3 +5,4 @@ export * from "./radial";
 export * from "./conic";
 export * from "./diamond";
 export * from "./mesh";
+export * from "./GradientFactory";
