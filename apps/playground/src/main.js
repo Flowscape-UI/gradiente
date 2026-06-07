@@ -4,6 +4,7 @@ import { setupFormController } from "./form-controller";
 
 import iconReload from "./assets/icon-reload.svg";
 import iconSend from "./assets/icon-send.svg";
+import iconUndo from "./assets/icon-undo.svg";
 
 document.documentElement.style.setProperty(
   "--icon-reload",
@@ -15,6 +16,88 @@ document.documentElement.style.setProperty(
   `url("${iconSend}")`
 );
 
+document.documentElement.style.setProperty(
+  "--icon-undo",
+  `url("${iconUndo}")`
+);
+
+const SVG_PREVIEWS = {
+  text: `
+    <text
+      x="50%"
+      y="20%"
+      dominant-baseline="middle"
+      text-anchor="middle"
+      class="svg text"
+    >Gradiente</text>
+  `,
+  square: `
+    <rect
+      x="70"
+      y="0"
+      width="180"
+      height="180"
+      rx="8"
+      class="svg"
+    />
+  `,
+  string: `
+    <path
+      class="svg svg-string"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="18"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M24 120 C 72 28, 118 154, 160 88 S 246 24, 296 104"
+    />
+  `,
+};
+
+function renderCard({ target, title, content }) {
+  return `
+    <div class="gradient-container" data-target="${target}">
+      <h3 class="title">${title}</h3>
+      ${content}
+      <p class="gradient-error" aria-live="polite"></p>
+    </div>
+  `;
+}
+
+function renderCssCard() {
+  return renderCard({
+    target: "css",
+    title: "CSS",
+    content: `<div class="draw-area"></div>`,
+  });
+}
+
+function renderCanvasCard(target, title, className) {
+  return renderCard({
+    target,
+    title,
+    content: `<canvas class="draw-area ${className}"></canvas>`,
+  });
+}
+
+function renderSvgCard(target, title, preview) {
+  return renderCard({
+    target,
+    title,
+    content: `
+      <svg
+        class="draw-area"
+        data-svg-example="${preview}"
+        viewBox="0 0 320 180"
+        role="img"
+        aria-label="${title} SVG gradient preview"
+      >
+        ${SVG_PREVIEWS[preview]}
+      </svg>
+    `,
+  });
+}
+
 document.querySelector("#app").innerHTML = `
   <header>
     <button type="button" class="theme-toggle" aria-label="Toggle theme">
@@ -24,6 +107,22 @@ document.querySelector("#app").innerHTML = `
 
   <div class="container playground">
     <form class="form">
+      <button
+        type="button"
+        class="history-control history-undo"
+        aria-label="Undo gradient"
+        disabled
+      >
+        <img width="24px" height="24px" src="${iconUndo}" alt="" aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        class="history-control history-redo"
+        aria-label="Redo gradient"
+        hidden
+      >
+        <img class="history-redo-icon" width="24px" height="24px" src="${iconUndo}" alt="" aria-hidden="true" />
+      </button>
       <input
         class="gradient-input"
         placeholder="Write gradient here..."
@@ -36,85 +135,28 @@ document.querySelector("#app").innerHTML = `
       </button>
     </form>
 
+    <aside class="history-panel" aria-label="Gradient session history">
+      <h2 class="history-title">History</h2>
+      <ol class="history-list"></ol>
+    </aside>
+
     <div class="container content">
       <div class="gradient-container" data-target="css-original">
-        <h2 class="title">CSS Original View</h2>
+        <h3 class="title">CSS Original</h3>
         <div class="draw-area"></div>
+        <p class="gradient-error" aria-live="polite"></p>
       </div>
 
       <div class="container transformer-content">
-        <div class="gradient-container" data-target="css">
-          <h2 class="title">CSS View</h2>
-          <div class="draw-area"></div>
-        </div>
-        <div class="gradient-container" data-target="canvas2d">
-          <h2 class="title">Canvas 2D view</h2>
-          <canvas class="draw-area canvas-2d-area"></canvas>
-        </div>
-        <div class="gradient-container" data-target="canvasWebGL">
-          <h2 class="title">Canvas WebGL view</h2>
-          <canvas class="draw-area canvas-webgl-area"></canvas>
-        </div>
+        ${renderCssCard()}
+        ${renderCanvasCard("canvas2d", "Canvas 2D", "canvas-2d-area")}
+        ${renderCanvasCard("canvasWebGL", "Canvas WebGL", "canvas-webgl-area")}
       </div>
 
-      <div class="container transformer-content">
-        <div class="gradient-container" data-target="svg-text">
-          <h2 class="title">Text SVG</h2>
-            <svg
-              class="draw-area"
-              data-svg-example="text"
-              viewBox="0 0 320 180"
-              role="img"
-              aria-label="SVG gradient text example"
-            >
-            <text
-              x="50%"
-              y="20%"
-              dominant-baseline="middle"
-              text-anchor="middle"
-              class="svg text"
-            >Gradiente</text>
-          </svg>
-        </div>
-        <div class="gradient-container" data-target="svg-square">
-          <h2 class="title">Square SVG</h2>
-          <svg
-            class="draw-area"
-            data-svg-example="square"
-            viewBox="0 0 320 180"
-            role="img"
-            aria-label="SVG gradient square example"
-          >
-            <rect
-              x="70"
-              y="0"
-              width="180"
-              height="180"
-              rx="8"
-              class="svg"
-            />
-          </svg>
-        </div>
-        <div class="gradient-container" data-target="svg-string">
-          <h2 class="title">String SVG</h2>
-          <svg
-            class="draw-area"
-            data-svg-example="string"
-            viewBox="0 0 320 180"
-            role="img"
-            aria-label="SVG gradient string example"
-          >
-            <path
-              class="svg svg-string"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="18"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M24 120 C 72 28, 118 154, 160 88 S 246 24, 296 104"
-            />
-          </svg>
-        </div>
+      <div class="container transformer-content svg-content">
+        ${renderSvgCard("svg-text", "SVG Text", "text")}
+        ${renderSvgCard("svg-square", "SVG Square", "square")}
+        ${renderSvgCard("svg-string", "SVG String", "string")}
       </div>
     </div>
   </div>
