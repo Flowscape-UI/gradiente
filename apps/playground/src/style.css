@@ -302,30 +302,6 @@ header {
         width: 100%;
         max-width: 736px;
     }
-
-    &.svg-content {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-        width: 100%;
-        max-width: 880px;
-    }
-}
-
-@media (max-width: 620px) {
-    .container {
-        &.transformer-content {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-}
-
-@media (max-width: 420px) {
-    .container {
-        &.transformer-content {
-            grid-template-columns: 1fr;
-        }
-    }
 }
 
 .svg {
