@@ -172,6 +172,20 @@ function getExample(id: string) {
   return exampleList.find((example) => example.id === id)
 }
 
+function getOwnRecordValue(record: Record<string, string>, key: string) {
+  return Object.prototype.hasOwnProperty.call(record, key)
+    ? record[key]
+    : ''
+}
+
+function getWebglSnapshot(id: string) {
+  return getOwnRecordValue(webglSnapshots.value, id)
+}
+
+function getWebglError(id: string) {
+  return getOwnRecordValue(webglErrors.value, id)
+}
+
 function getRenderSize(element: Element | undefined, fallback = 320) {
   const rect = element?.getBoundingClientRect()
   const dpr = window.devicePixelRatio || 1
@@ -223,7 +237,7 @@ function drawWebgl(id: string) {
   if (
     !example ||
     example.error ||
-    webglSnapshots.value[id] ||
+    getWebglSnapshot(id) ||
     pendingWebglSnapshots.has(id)
   ) {
     return
@@ -238,19 +252,32 @@ function drawWebgl(id: string) {
   canvas.height = height
 
   try {
+    const gl = canvas.getContext('webgl', { preserveDrawingBuffer: true })
+
+    if (!gl) {
+      throw new Error('WebGL is not supported.')
+    }
+
     const paint = transformTo('canvas-webgl', example.input)
 
     paint.draw(canvas, width, height)
+
+    gl.finish()
+
+    const snapshot = canvas.toDataURL('image/png')
+
+    if (!snapshot || snapshot === 'data:,') {
+      throw new Error('WebGL snapshot could not be captured.')
+    }
+
     webglSnapshots.value = {
       ...webglSnapshots.value,
-      [id]: canvas.toDataURL('image/png'),
+      [id]: snapshot,
     }
     webglErrors.value = {
       ...webglErrors.value,
       [id]: '',
     }
-
-    const gl = canvas.getContext('webgl')
 
     gl?.getExtension('WEBGL_lose_context')?.loseContext()
   } catch (value) {
@@ -405,12 +432,12 @@ const LinearPreviewContent = defineComponent({
             renderCaption('Canvas 2D'),
           ]),
           h('figure', { class: 'linear-render-tile' }, [
-            webglSnapshots.value[props.example.id]
+            getWebglSnapshot(props.example.id)
               ? h('img', {
                 ref: (element: unknown) =>
                   setWebglSurfaceRef(props.example.id, element),
                 class: 'linear-render-tile__surface linear-render-tile__image',
-                src: webglSnapshots.value[props.example.id],
+                src: getWebglSnapshot(props.example.id),
                 alt: `${props.example.label} rendered with Canvas WebGL`,
                 'data-gradiente-renderer': 'canvas-webgl',
                 'data-gradiente-input': props.example.input,
@@ -423,11 +450,11 @@ const LinearPreviewContent = defineComponent({
                 'data-gradiente-input': props.example.input,
               }, 'Rendering WebGL...'),
             renderCaption('Canvas WebGL snapshot'),
-            webglErrors.value[props.example.id]
+            getWebglError(props.example.id)
               ? h(
                 'p',
                 { class: 'linear-render-set__error' },
-                webglErrors.value[props.example.id],
+                getWebglError(props.example.id),
               )
               : null,
           ]),
