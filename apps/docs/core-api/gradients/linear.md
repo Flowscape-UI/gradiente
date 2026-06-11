@@ -534,6 +534,15 @@ snapshot generated through `transformTo('canvas-webgl', gradient)` so the page
 does not keep many live WebGL contexts open at the same time. Preview rendering
 is lazy-loaded as each example approaches the viewport.
 
+<GradientFrameworkTabs
+  id="linear-framework-tabs"
+  title="Use a linear gradient in your framework"
+  description="The same gradiente model can be mounted in React, Vanilla JS, Vue, or Svelte. Each example parses the source string, converts it through transformTo('css'), and applies the result as a real background image."
+  gradient="linear-gradient(120deg in oklch, #ff74f6 0%, #fb7655 45%, #405de6 100%)"
+  gradient-kind="linear gradient"
+  component-name="LinearGradientPreview"
+/>
+
 ## What A Linear Gradient Contains
 
 The linear gradient model has four conceptual parts:

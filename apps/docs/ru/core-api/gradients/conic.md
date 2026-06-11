@@ -560,6 +560,19 @@ pattern payload, потому что в SVG нет нативного прими
 targets. Колонка WebGL сохраняется как snapshot, чтобы страница не держала
 много живых WebGL-контекстов одновременно.
 
+<GradientFrameworkTabs
+  id="conic-framework-tabs-ru"
+  eyebrow="Интеграция gradiente"
+  title="Использование конического градиента во фреймворке"
+  description="Conic-градиенты являются нативными CSS backgrounds, но gradiente все равно парсит, сортирует, нормализует и трансформирует одну модель для каждого renderer. Каждый пример преобразует распарсенный градиент через transformTo('css') и подключает результат во фреймворке."
+  gradient="conic-gradient(from 74deg at 50% 50% in oklch, hsl(325, 64%, 54%) 0%, hsl(30, 85%, 58%) 63%, hsl(3, 69%, 66%) 72%, hsl(208, 94%, 47%) 100%)"
+  gradient-kind="конический градиент"
+  preview-aria-label="Превью конического градиента"
+  tabs-aria-label="Примеры для фреймворков"
+  code-label-suffix="пример кода"
+  component-name="ConicGradientPreview"
+/>
+
 ## Из чего состоит конический градиент
 
 У модели конического градиента есть пять основных частей:

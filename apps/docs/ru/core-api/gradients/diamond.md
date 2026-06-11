@@ -556,6 +556,19 @@ targets: CSS target, Canvas 2D, Canvas WebGL и SVG. CSS target - это
 захватывается как snapshot, чтобы страница не держала слишком много активных
 WebGL-контекстов одновременно.
 
+<GradientFrameworkTabs
+  id="diamond-framework-tabs-ru"
+  eyebrow="Интеграция gradiente"
+  title="Использование diamond-градиента во фреймворке"
+  description="Diamond-градиенты не являются нативными CSS-функциями, поэтому transformTo('css') возвращает готовый для background SVG data URL. Одну и ту же распарсенную модель gradiente все равно можно подключить в React, Vanilla JS, Vue или Svelte."
+  gradient="diamond-gradient(farthest-corner at 48% 45% in oklch, #5851db 0%, #c13584 35%, #fcb045 70%, #405de6 100%)"
+  gradient-kind="diamond-градиент"
+  preview-aria-label="Превью diamond-градиента"
+  tabs-aria-label="Примеры для фреймворков"
+  code-label-suffix="пример кода"
+  component-name="DiamondGradientPreview"
+/>
+
 ## Из чего состоит diamond-градиент
 
 У модели diamond-градиента есть пять смысловых частей:

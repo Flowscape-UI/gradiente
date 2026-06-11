@@ -534,6 +534,19 @@ WebGL - это snapshot, созданный через `transformTo('canvas-webg
 поэтому страница не держит много активных WebGL contexts одновременно. Превью
 загружаются лениво, когда пример приближается к viewport.
 
+<GradientFrameworkTabs
+  id="linear-framework-tabs-ru"
+  eyebrow="Интеграция gradiente"
+  title="Использование линейного градиента во фреймворке"
+  description="Одна и та же модель gradiente может быть подключена в React, Vanilla JS, Vue или Svelte. Каждый пример парсит исходную строку, преобразует ее через transformTo('css') и применяет результат как настоящий background image."
+  gradient="linear-gradient(120deg in oklch, #ff74f6 0%, #fb7655 45%, #405de6 100%)"
+  gradient-kind="линейный градиент"
+  preview-aria-label="Превью линейного градиента"
+  tabs-aria-label="Примеры для фреймворков"
+  code-label-suffix="пример кода"
+  component-name="LinearGradientPreview"
+/>
+
 ## Из Чего Состоит Линейный Градиент
 
 У модели линейного градиента есть четыре концептуальные части:

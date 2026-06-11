@@ -559,6 +559,15 @@ Every preview block on this page is rendered by gradiente in four targets at
 once. The WebGL column is captured as a snapshot so the page does not keep many
 live WebGL contexts open at the same time.
 
+<GradientFrameworkTabs
+  id="conic-framework-tabs"
+  title="Use a conic gradient in your framework"
+  description="Conic gradients are native CSS backgrounds, but gradiente still parses, sorts, normalizes, and transforms the same model for every renderer. Each example converts the parsed gradient with transformTo('css') and mounts the result in the framework."
+  gradient="conic-gradient(from 74deg at 50% 50% in oklch, hsl(325, 64%, 54%) 0%, hsl(30, 85%, 58%) 63%, hsl(3, 69%, 66%) 72%, hsl(208, 94%, 47%) 100%)"
+  gradient-kind="conic gradient"
+  component-name="ConicGradientPreview"
+/>
+
 ## What A Conic Gradient Contains
 
 The conic gradient model has five conceptual parts:

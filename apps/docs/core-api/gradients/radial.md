@@ -878,6 +878,15 @@ snapshot generated through `transformTo('canvas-webgl', gradient)` so the page
 does not keep many live WebGL contexts open at the same time. Preview rendering
 is lazy-loaded as each example approaches the viewport.
 
+<GradientFrameworkTabs
+  id="radial-framework-tabs"
+  title="Use a radial gradient in your framework"
+  description="The same gradiente model can be mounted in React, Vanilla JS, Vue, or Svelte. Each example parses the source string, converts it through transformTo('css'), and applies the result as a real background image."
+  gradient="radial-gradient(circle at 35% 35% in oklch, #ff74f6 0%, #fb7655 45%, #405de6 100%)"
+  gradient-kind="radial gradient"
+  component-name="RadialGradientPreview"
+/>
+
 ## What A Radial Gradient Contains
 
 The radial gradient model has five conceptual parts:

@@ -555,6 +555,15 @@ Canvas 2D, Canvas WebGL, and SVG. The CSS target is a generated SVG data URL, an
 the SVG target is a pattern payload. The WebGL column is captured as a snapshot
 so the page does not keep many live WebGL contexts open at the same time.
 
+<GradientFrameworkTabs
+  id="diamond-framework-tabs"
+  title="Use a diamond gradient in your framework"
+  description="Diamond gradients are not native CSS functions, so transformTo('css') returns a background-ready SVG data URL. The same parsed gradiente model can still be mounted in React, Vanilla JS, Vue, or Svelte."
+  gradient="diamond-gradient(farthest-corner at 48% 45% in oklch, #5851db 0%, #c13584 35%, #fcb045 70%, #405de6 100%)"
+  gradient-kind="diamond gradient"
+  component-name="DiamondGradientPreview"
+/>
+
 ## What A Diamond Gradient Contains
 
 The diamond gradient model has five conceptual parts:

@@ -567,6 +567,15 @@ Mesh previews on this page are lazy. A preview does not call `parse()` or
 `transformTo()` until it approaches the viewport, because mesh rendering is much
 heavier than serializing a normal stop-based gradient.
 
+<GradientFrameworkTabs
+  id="mesh-framework-tabs"
+  title="Use a mesh gradient in your framework"
+  description="Mesh gradients are not native CSS functions, so transformTo('css') returns a background-ready SVG data URL. The examples use the same heavy mesh string you see above, but the framework code stays the same: parse once, transform to CSS, and mount as backgroundImage."
+  :gradient="examples.hero.input"
+  gradient-kind="mesh gradient"
+  component-name="MeshGradientPreview"
+/>
+
 ## What A Mesh Gradient Contains
 
 The mesh gradient model has four required parts and one optional patch detail:

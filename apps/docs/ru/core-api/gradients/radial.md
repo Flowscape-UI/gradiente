@@ -878,6 +878,19 @@ WebGL - это снимок, созданный через `transformTo('canvas-
 чтобы страница не держала слишком много активных WebGL-контекстов одновременно.
 Превью грузятся лениво, когда пример приближается к области просмотра.
 
+<GradientFrameworkTabs
+  id="radial-framework-tabs-ru"
+  eyebrow="Интеграция gradiente"
+  title="Использование радиального градиента во фреймворке"
+  description="Одна и та же модель gradiente может быть подключена в React, Vanilla JS, Vue или Svelte. Каждый пример парсит исходную строку, преобразует ее через transformTo('css') и применяет результат как настоящий background image."
+  gradient="radial-gradient(circle at 35% 35% in oklch, #ff74f6 0%, #fb7655 45%, #405de6 100%)"
+  gradient-kind="радиальный градиент"
+  preview-aria-label="Превью радиального градиента"
+  tabs-aria-label="Примеры для фреймворков"
+  code-label-suffix="пример кода"
+  component-name="RadialGradientPreview"
+/>
+
 ## Из чего состоит радиальный градиент
 
 У модели радиального градиента есть пять смысловых частей:
