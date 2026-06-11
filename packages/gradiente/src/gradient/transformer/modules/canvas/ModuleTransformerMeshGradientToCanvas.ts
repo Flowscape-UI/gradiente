@@ -4,14 +4,13 @@ import {
     buildMeshEdgeSkirtTriangles,
     buildPatchTriangles,
     rasterizeMeshTriangle,
+    resolveMeshRenderSubdivisions,
     type MeshTriangle,
 } from "../helpers";
 import type {
     ICanvasPaintResult,
 } from "../types";
 import { GradientTransformerModule } from "../GradientTransformerModule";
-
-const BICUBIC_SUBDIVISIONS = 24;
 
 function fillMeshTriangle(
     data: Uint8ClampedArray,
@@ -46,9 +45,7 @@ extends GradientTransformerModule<GradientMesh, ICanvasPaintResult> {
                 const imageData = ctx.createImageData(width, height);
                 const { config, patches, vertexMap, grid, sampler } =
                     buildMeshRenderContext(gradient, width, height);
-                const subdivisions = config.method === "bicubic"
-                    ? BICUBIC_SUBDIVISIONS
-                    : 1;
+                const subdivisions = resolveMeshRenderSubdivisions(config);
                 const edgeTriangles = buildMeshEdgeSkirtTriangles(
                     sampler,
                     patches,

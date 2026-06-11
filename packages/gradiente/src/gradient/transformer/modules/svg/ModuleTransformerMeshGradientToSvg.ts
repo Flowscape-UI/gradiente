@@ -6,6 +6,7 @@ import {
     formatNumber,
     formatRgbaTupleAsCss,
     getAverageMeshTriangleColor,
+    resolveMeshRenderSubdivisions,
     type MeshTriangle,
 } from "../helpers";
 import { GradientTransformerModule } from "../GradientTransformerModule";
@@ -20,6 +21,25 @@ const DEFAULT_ID = "gradiente-mesh-gradient";
 const MESH_VIEW_BOX_SIZE = 100;
 const BILINEAR_SUBDIVISIONS = 32;
 const BICUBIC_SUBDIVISIONS = 40;
+const TRIANGLE_OVERLAP = 0.04;
+
+function expandTrianglePoint(
+    point: MeshTriangle[number],
+    center: { x: number; y: number },
+): string {
+    const dx = point.x - center.x;
+    const dy = point.y - center.y;
+    const length = Math.hypot(dx, dy);
+
+    if (length === 0) {
+        return `${formatNumber(point.x)} ${formatNumber(point.y)}`;
+    }
+
+    const x = point.x + (dx / length) * TRIANGLE_OVERLAP;
+    const y = point.y + (dy / length) * TRIANGLE_OVERLAP;
+
+    return `${formatNumber(x)} ${formatNumber(y)}`;
+}
 
 function triangleToPolygon(triangle: MeshTriangle): string {
     const [a, b, c] = triangle;
@@ -32,13 +52,17 @@ function triangleToPolygon(triangle: MeshTriangle): string {
             average[3],
         ],
     );
+    const center = {
+        x: (a.x + b.x + c.x) / 3,
+        y: (a.y + b.y + c.y) / 3,
+    };
     const points = [
-        `${formatNumber(a.x)} ${formatNumber(a.y)}`,
-        `${formatNumber(b.x)} ${formatNumber(b.y)}`,
-        `${formatNumber(c.x)} ${formatNumber(c.y)}`,
+        expandTrianglePoint(a, center),
+        expandTrianglePoint(b, center),
+        expandTrianglePoint(c, center),
     ].join(" ");
 
-    return `<polygon points="${points}" fill="${color}" stroke="${color}" stroke-width="0.08"/>`;
+    return `<polygon points="${points}" fill="${color}"/>`;
 }
 
 export class ModuleTransformerMeshGradientToSvg
@@ -60,9 +84,10 @@ extends GradientTransformerModule<GradientMesh, ISvgGradientResult> {
                 MESH_VIEW_BOX_SIZE,
                 MESH_VIEW_BOX_SIZE,
             );
-        const subdivisions = config.method === "bicubic"
-            ? BICUBIC_SUBDIVISIONS
-            : BILINEAR_SUBDIVISIONS;
+        const subdivisions = resolveMeshRenderSubdivisions(config, {
+            bilinear: BILINEAR_SUBDIVISIONS,
+            bicubic: BICUBIC_SUBDIVISIONS,
+        });
         const patchTriangles = patches.flatMap((patch) =>
             buildPatchTriangles(sampler, patch, vertexMap, subdivisions),
         );

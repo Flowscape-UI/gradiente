@@ -3,6 +3,7 @@ import {
     buildMeshRenderContext,
     buildMeshEdgeSkirtTriangles,
     buildPatchTriangles,
+    resolveMeshRenderSubdivisions,
 } from "../helpers";
 import { GradientTransformerModule } from "../GradientTransformerModule";
 import { createWebGLProgram } from "./helpers";
@@ -16,8 +17,6 @@ import {
     prepareWebGLCanvas,
 } from "./runtime";
 import type { IWebGLPaintResult } from "./types";
-
-const BICUBIC_SUBDIVISIONS = 24;
 
 function toClipX(value: number, width: number): number {
     return (value / width) * 2 - 1;
@@ -49,9 +48,7 @@ extends GradientTransformerModule<GradientMesh, IWebGLPaintResult> {
                 );
                 const { config, patches, vertexMap, grid, sampler } =
                     buildMeshRenderContext(gradient, width, height);
-                const subdivisions = config.method === "bicubic"
-                    ? BICUBIC_SUBDIVISIONS
-                    : 1;
+                const subdivisions = resolveMeshRenderSubdivisions(config);
                 const edgeTriangles = buildMeshEdgeSkirtTriangles(
                     sampler,
                     patches,

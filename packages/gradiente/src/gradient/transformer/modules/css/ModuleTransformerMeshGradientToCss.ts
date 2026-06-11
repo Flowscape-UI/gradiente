@@ -6,12 +6,12 @@ import {
     encodeSvgDataUrlCss,
     formatRgbaTupleAsCss,
     rasterizeMeshTriangle,
+    resolveMeshRenderSubdivisions,
     type MeshTriangle,
 } from "../helpers";
 import { GradientTransformerModule } from "../GradientTransformerModule";
 
 const CSS_SAMPLE_SIZE = 96;
-const BICUBIC_SUBDIVISIONS = 24;
 
 function paintTriangle(
     colors: Array<[number, number, number, number] | null>,
@@ -49,9 +49,7 @@ extends GradientTransformerModule<GradientMesh, string> {
     protected transform(gradient: GradientMesh): string {
         const { config, patches, vertexMap, grid, sampler } =
             buildMeshRenderContext(gradient, CSS_SAMPLE_SIZE, CSS_SAMPLE_SIZE);
-        const subdivisions = config.method === "bicubic"
-            ? BICUBIC_SUBDIVISIONS
-            : 1;
+        const subdivisions = resolveMeshRenderSubdivisions(config);
         const triangles = patches.flatMap((patch) =>
             buildPatchTriangles(sampler, patch, vertexMap, subdivisions),
         );

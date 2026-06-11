@@ -35,6 +35,22 @@ export type MeshRenderContext = {
     sampler: GradientMeshColorSampler;
 };
 
+const DEFAULT_MESH_BILINEAR_SUBDIVISIONS = 24;
+const DEFAULT_MESH_BICUBIC_SUBDIVISIONS = 24;
+
+/**
+ * RU: Возвращает количество подсемплов для mesh-патча, чтобы рендеры не теряли цветовую интерполяцию внутри ячейки.
+ * EN: Returns the mesh patch subdivision count so renderers do not lose color interpolation inside a cell.
+ */
+export function resolveMeshRenderSubdivisions(
+    config: GradientMeshConfig,
+    overrides: Partial<Record<GradientMeshConfig["method"], number>> = {},
+): number {
+    return config.method === "bicubic"
+        ? overrides.bicubic ?? DEFAULT_MESH_BICUBIC_SUBDIVISIONS
+        : overrides.bilinear ?? DEFAULT_MESH_BILINEAR_SUBDIVISIONS;
+}
+
 /**
  * RU: Преобразует vertex из модели mesh-gradient в координаты и RGB-цвет рендера.
  * EN: Converts a mesh-gradient model vertex into render coordinates and RGB color.

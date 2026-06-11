@@ -58,6 +58,19 @@ describe("SVG gradient transformers", () => {
         expect(GradientTransformer.get("svg", "radial-gradient")).not.toBeNull();
     });
 
+    it("uses objectBoundingBox coordinates for radial ellipse transforms", () => {
+        const result: any = transformTo(
+            "svg",
+            "radial-gradient(35% 70%, cyan 0%, blue 60%, black 100%)",
+        );
+
+        expect(result.type).toBe("radialGradient");
+        expect(result.gradient).toContain(
+            'gradientTransform="translate(0.5 0.5) scale(0.5 1) translate(-0.5 -0.5)"',
+        );
+        expect(result.gradient).not.toContain("translate(50 50)");
+    });
+
     it("expands repeating radial gradients for SVG output", () => {
         const result: any = transformTo(
             "svg",

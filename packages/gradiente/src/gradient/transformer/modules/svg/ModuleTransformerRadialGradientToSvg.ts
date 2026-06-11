@@ -1,6 +1,7 @@
 import { GradientRadial } from "../../../kind/radial";
 import { GradientTransformerModule } from "../GradientTransformerModule";
 import {
+    formatNumber,
     resolveGradientPosition,
     resolveRadialRadii,
 } from "../helpers";
@@ -50,8 +51,16 @@ extends GradientTransformerModule<GradientRadial, ISvgGradientResult> {
         const radius = Math.max(radii.x, radii.y);
         const scaleX = radii.x / radius;
         const scaleY = radii.y / radius;
+        const centerX = center.x / 100;
+        const centerY = center.y / 100;
         const transform = config.shape === "ellipse"
-            ? ` gradientTransform="translate(${center.x} ${center.y}) scale(${scaleX} ${scaleY}) translate(${-center.x} ${-center.y})"`
+            ? [
+                " gradientTransform=\"",
+                `translate(${formatNumber(centerX)} ${formatNumber(centerY)}) `,
+                `scale(${formatNumber(scaleX)} ${formatNumber(scaleY)}) `,
+                `translate(${formatNumber(-centerX)} ${formatNumber(-centerY)})`,
+                "\"",
+            ].join("")
             : "";
         const gradient = [
             `<radialGradient id="${id}" gradientUnits="objectBoundingBox" cx="${formatPoint(center.x)}" cy="${formatPoint(center.y)}" r="${formatPoint(radius)}"${transform}>`,
