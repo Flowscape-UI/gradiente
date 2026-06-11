@@ -1,105 +1,432 @@
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { transformTo } from 'gradiente'
+
+const cssRendererGradient = 'linear-gradient(to right, #ff74f6, #405de6)'
+const canvas2dRendererGradient =
+  'radial-gradient(circle at 30% 35%, #ffffff 0%, #ff74f6 35%, #405de6 100%)'
+const webglRendererGradient =
+  'conic-gradient(from 74deg at 50% 50%, #d53f96, #ef9439 63%, #077fe9)'
+
+const cssRendererBackground = transformTo<string>('css', cssRendererGradient)
+const canvas2dPreview = ref<HTMLCanvasElement | null>(null)
+const webglPreview = ref<HTMLCanvasElement | null>(null)
+const webglError = ref('')
+
+let resizeObserver: ResizeObserver | null = null
+
+function resizeCanvas(canvas: HTMLCanvasElement) {
+  const rect = canvas.getBoundingClientRect()
+  const dpr = window.devicePixelRatio || 1
+  const width = Math.max(1, Math.round((rect.width || 320) * dpr))
+  const height = Math.max(1, Math.round((rect.height || 180) * dpr))
+
+  if (canvas.width !== width) {
+    canvas.width = width
+  }
+
+  if (canvas.height !== height) {
+    canvas.height = height
+  }
+
+  return { width, height }
+}
+
+function drawCanvas2dPreview() {
+  const canvas = canvas2dPreview.value
+
+  if (!canvas) {
+    return
+  }
+
+  const ctx = canvas.getContext('2d')
+
+  if (!ctx) {
+    return
+  }
+
+  const { width, height } = resizeCanvas(canvas)
+  const paint = transformTo('canvas-2d', canvas2dRendererGradient)
+
+  paint.draw(ctx, width, height)
+}
+
+function drawWebglPreview() {
+  const canvas = webglPreview.value
+
+  if (!canvas) {
+    return
+  }
+
+  const { width, height } = resizeCanvas(canvas)
+  const paint = transformTo('canvas-webgl', webglRendererGradient)
+
+  try {
+    paint.draw(canvas, width, height)
+    webglError.value = ''
+  } catch (value) {
+    webglError.value = value instanceof Error
+      ? value.message
+      : 'Не удалось отрисовать WebGL preview.'
+  }
+}
+
+function drawRendererPreviews() {
+  drawCanvas2dPreview()
+  drawWebglPreview()
+}
+
+onMounted(() => {
+  drawRendererPreviews()
+
+  if ('ResizeObserver' in window) {
+    resizeObserver = new ResizeObserver(drawRendererPreviews)
+
+    if (canvas2dPreview.value) {
+      resizeObserver.observe(canvas2dPreview.value)
+    }
+
+    if (webglPreview.value) {
+      resizeObserver.observe(webglPreview.value)
+    }
+  }
+})
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+})
+</script>
+
 # Ключевое API
 
-gradiente предоставляет небольшой публичный API для парсинга, проверки, форматирования и трансформации градиентов.
+Core API - это небольшой набор функций, через который ты превращаешь строки
+градиентов в модели gradiente, валидируешь пользовательский ввод, нормализуешь
+output и отправляешь градиенты в рендереры.
 
-## parse
+Главная практическая идея: один раз распарсить градиент, а потом использовать
+одну и ту же модель везде.
+
+<GradientPreview
+  title="Поток Core API"
+  gradient="linear-gradient(120deg, #ff74f6 0%, #405de6 55%, #12c2e9 100%)"
+  caption="Это превью отрисовано из parsed-модели gradiente через transformTo('css', gradient)."
+/>
+
+```ts
+import { parse, transformTo } from 'gradiente'
+
+const gradient = parse(
+  'linear-gradient(120deg, #ff74f6 0%, #405de6 55%, #12c2e9 100%)'
+)
+
+const css = transformTo('css', gradient)
+```
+
+Строка остаётся удобным форматом для ввода и вывода. Parsed object становится
+стабильной моделью, которую можно читать, менять, сериализовать, сравнивать и
+трансформировать.
+
+## Карта API
+
+```txt
+parse()        string -> gradient object
+isGradient()   unknown string -> boolean
+format()       string | gradient object -> normalized string
+transformTo()  string | gradient object -> renderer output
+transformFrom() target output -> gradient object, если есть reverse transformer
+```
+
+В большинстве приложений работа начинается с `parse()`, пользовательский ввод
+проверяется через `isGradient()`, данные перед сохранением нормализуются через
+`format()`, а рендеринг делается через `transformTo()`.
+
+## Парсинг В Модель
+
+Используй `parse()`, когда нужно перестать работать с градиентом как с сырой
+строкой.
 
 ```ts
 import { parse } from 'gradiente'
 
-const gradient = parse('linear-gradient(to right, red, blue)')
-````
+const gradient = parse('linear-gradient(to right, red 0%, blue 100%)')
 
-`parse()` конвертирует строку градиента в объект
-
-Под капотом gradiente токенизирует строку, строит ABI и создаёт соответствующий класс градиента.
-
-## isGradient
-
-```ts
-import { isGradient } from 'gradiente'
-
-isGradient('linear-gradient(red, blue)') // true
-isGradient('hello world') // false
+gradient.type
+gradient.getConfig()
+gradient.toString()
 ```
 
-Используя это для безопасной валидации
+Функция возвращает типизированный gradient instance. У градиентов со stop-точками
+можно дополнительно читать список stops.
 
-## format
+```ts
+import { parse } from 'gradiente'
+
+const gradient = parse('linear-gradient(to right, red 0%, blue 100%)')
+
+if ('getStops' in gradient) {
+  const stops = gradient.getStops()
+}
+```
+
+В этом главное отличие gradiente от string helper. Строка сначала превращается в
+переиспользуемую модель, и только потом отправляется в renderer.
+
+## Валидация Пользовательского Ввода
+
+Используй `isGradient()`, когда ввод может быть невалидным и нужен безопасный
+boolean-check.
+
+```ts
+import { isGradient, parse } from 'gradiente'
+
+const input = 'conic-gradient(from 74deg, #d53f96, #ef9439, #077fe9)'
+
+if (isGradient(input)) {
+  const gradient = parse(input)
+}
+```
+
+Используй `parse()`, когда невалидный ввод должен выбросить ошибку с конкретной
+причиной. Используй `isGradient()`, когда проверка не должна ломать UI.
+
+## Нормализация Перед Сохранением
+
+Используй `format()`, когда нужна каноническая строка после парсинга.
 
 ```ts
 import { format } from 'gradiente'
 
-format('linear-gradient(to right, red, blue)')
+const normalized = format('linear-gradient(to right, red, blue)')
 ```
 
-`format()` конвертирует строку или объект в нормализованную строку градиента
-
-It also accepts an existing gradient object:
+`format()` принимает и строки, и уже созданные gradient objects.
 
 ```ts
-const gradient = parse('linear-gradient(red, blue)')
+import { format, parse } from 'gradiente'
 
-format(gradient)
+const gradient = parse('linear-gradient(red, blue)')
+const normalized = format(gradient)
 ```
 
-## transformTo
+Это удобно перед сохранением presets, хранением состояния редактора,
+синхронизацией данных или сравнением gradient definitions.
+
+## Рендеринг Через CSS
+
+Используй target `css`, когда нужен CSS background value.
+
+```ts
+import { parse, transformTo } from 'gradiente'
+
+const gradient = parse('linear-gradient(to right, #ff74f6, #405de6)')
+const css = transformTo('css', gradient)
+
+const preview = document.querySelector<HTMLElement>('.preview')
+
+if (preview) {
+  preview.style.backgroundImage = css
+}
+```
+
+Визуальный результат:
+
+<figure class="renderer-preview">
+  <div
+    class="renderer-preview__surface"
+    :style="{ backgroundImage: cssRendererBackground }"
+    data-gradiente-renderer="css"
+    :data-gradiente-input="cssRendererGradient"
+  />
+  <figcaption class="renderer-preview__caption">
+    HTML/CSS background, отрисованный через <code>transformTo('css', gradient)</code>.
+  </figcaption>
+</figure>
+
+Для нативных CSS gradient kinds результатом будет CSS gradient string. Для
+gradiente-specific видов вроде `diamond-gradient` и `mesh-gradient` CSS
+transformer возвращает renderable adapter background.
 
 ```ts
 import { transformTo } from 'gradiente'
 
-const css = transformTo('css', 'linear-gradient(to right, red, blue)')
+const css = transformTo(
+  'css',
+  'diamond-gradient(at center, #5851db 0%, #fcb045 100%)'
+)
 ```
 
-`transformTo()` переводит строковый градиент в градиент для любой таргетированнной системы
+## Рендеринг Через Canvas 2D
 
-Примеры:
-```txt
-css
-canvas-2d
-canvas-webgl
-svg
+Используй target `canvas-2d`, когда gradiente должен нарисовать градиент в
+`CanvasRenderingContext2D`.
+
+```ts
+import { transformTo } from 'gradiente'
+
+const canvas = document.querySelector<HTMLCanvasElement>('canvas')
+const paint = transformTo(
+  'canvas-2d',
+  'radial-gradient(circle at 30% 35%, #ffffff 0%, #ff74f6 35%, #405de6 100%)'
+)
+
+if (canvas) {
+  const ctx = canvas.getContext('2d')
+
+  if (ctx) {
+    canvas.width = canvas.clientWidth
+    canvas.height = canvas.clientHeight
+    paint.draw(ctx, canvas.width, canvas.height)
+  }
+}
 ```
 
-Некоторые будут добавлены в будущих релизах или сделаны под ключ для своих целей
+Визуальный результат:
 
-## transformFrom
+<figure class="renderer-preview">
+  <canvas
+    ref="canvas2dPreview"
+    class="renderer-preview__surface renderer-preview__canvas"
+    data-gradiente-renderer="canvas-2d"
+    :data-gradiente-input="canvas2dRendererGradient"
+  />
+  <figcaption class="renderer-preview__caption">
+    Canvas 2D preview, отрисованный через <code>transformTo('canvas-2d', gradient)</code>.
+  </figcaption>
+</figure>
+
+Возвращаемое значение зависит от renderer target. Для Canvas 2D это paint object
+с методом `draw(ctx, width, height)`.
+
+## Рендеринг Через WebGL
+
+Используй target `canvas-webgl`, когда градиент должен быть нарисован через
+WebGL.
+
+```ts
+import { transformTo } from 'gradiente'
+
+const canvas = document.querySelector<HTMLCanvasElement>('canvas')
+const paint = transformTo(
+  'canvas-webgl',
+  'conic-gradient(from 74deg at 50% 50%, #d53f96, #ef9439 63%, #077fe9)'
+)
+
+if (canvas) {
+  canvas.width = canvas.clientWidth
+  canvas.height = canvas.clientHeight
+  paint.draw(canvas, canvas.width, canvas.height)
+}
+```
+
+Визуальный результат:
+
+<figure class="renderer-preview">
+  <canvas
+    ref="webglPreview"
+    class="renderer-preview__surface renderer-preview__canvas"
+    data-gradiente-renderer="canvas-webgl"
+    :data-gradiente-input="webglRendererGradient"
+  />
+  <figcaption class="renderer-preview__caption">
+    Canvas WebGL preview, отрисованный через <code>transformTo('canvas-webgl', gradient)</code>.
+  </figcaption>
+  <p v-if="webglError" class="renderer-preview__error">{{ webglError }}</p>
+</figure>
+
+API остаётся тем же: приложение запрашивает target, а transformer возвращает
+output shape для этого target.
+
+## Рендеринг Через SVG
+
+Используй target `svg`, когда нужен SVG paint server output.
+
+```ts
+import { transformTo } from 'gradiente'
+
+const svg = document.querySelector<SVGSVGElement>('svg')
+const rect = svg?.querySelector<SVGRectElement>('rect')
+const paint = transformTo('svg', 'linear-gradient(to right, #ff74f6, #405de6)')
+
+if (svg && rect) {
+  svg.insertAdjacentHTML('afterbegin', paint.defs)
+  rect.setAttribute('fill', paint.url)
+}
+```
+
+SVG transformer возвращает описание с `defs`, `url` и serialized SVG data,
+которые нужны для применения градиента.
+
+## Импорт Из Других Targets
+
+`transformFrom()` - обратная сторона transformer system.
 
 ```ts
 import { transformFrom } from 'gradiente'
 
-const gradient = transformFrom('css', 'linear-gradient', {
-  // target-specific input
-})
+declare const token: unknown
+
+const gradient = transformFrom(
+  'design-token',
+  'linear-gradient',
+  token
+)
 ```
 
-`transformFrom()` переводит обратно в gradiente формат
+Reverse transformation доступна тогда, когда зарегистрированный transformer
+module реализует `from()`. Так Core API остаётся симметричным, но не заставляет
+каждый renderer output быть обратимым.
 
-## Модель работы
+## Рабочая Модель
 
 ```txt
-string
-  ↓ parse()
-gradient object
-  ↓ format()
-string
+user input
+  -> isGradient()
+  -> parse()
+  -> gradient object
+  -> format()
+  -> stored normalized string
 
 gradient object
-  ↓ transformTo()
-target format
-
-target format
-  ↓ transformFrom()
-gradient object
+  -> transformTo('css')
+  -> transformTo('canvas-2d')
+  -> transformTo('canvas-webgl')
+  -> transformTo('svg')
+  -> transformTo('custom-target')
 ```
 
-## Заключение
+## Дальше
 
-Используй:
-```txt
-parse        → create gradient object
-isGradient   → validate input safely
-format       → normalize to string
-transformTo  → export to target format
-transformFrom → import from target format
-```
+- [Трансформеры](/ru/core-api/transformers) подробнее объясняют renderer targets.
+- [Собственные трансформеры](/ru/core-api/custom-transformers) объясняют, как добавлять свои targets.
+
+<style scoped>
+.renderer-preview {
+  margin: 20px 0 28px;
+}
+
+.renderer-preview__surface {
+  width: 100%;
+  min-height: 180px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background-color: var(--vp-c-bg-soft);
+  display: block;
+}
+
+.renderer-preview__canvas {
+  height: 180px;
+}
+
+.renderer-preview__caption {
+  margin-top: 8px;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.renderer-preview__error {
+  margin-top: 8px;
+  color: var(--vp-c-danger-1);
+  font-size: 13px;
+}
+</style>

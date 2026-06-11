@@ -76,7 +76,6 @@ export default defineConfig({
             text: 'Core API',
             items: [
               { text: 'Introduction', link: '/core-api/intro' },
-              { text: 'Working with gradients', link: '/core-api/working-with-gradients' },
               {
                 text: 'Gradient Types',
                 items: [
@@ -143,7 +142,6 @@ export default defineConfig({
             text: 'Ключевое API',
             items: [
               { text: 'Введение', link: '/ru/core-api/intro' },
-              { text: 'Объект градиента', link: '/ru/core-api/working-with-gradients' },
               {
                 text: 'Типы градиентов',
                 items: [
