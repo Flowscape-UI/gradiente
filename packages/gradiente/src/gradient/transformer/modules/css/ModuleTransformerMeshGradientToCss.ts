@@ -11,10 +11,18 @@ import {
 } from "../helpers";
 import { GradientTransformerModule } from "../GradientTransformerModule";
 
-const CSS_SAMPLE_SIZE = 96;
+const CSS_SAMPLE_SIZE = 256;
+
+type PixelAccumulator = {
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+    count: number;
+};
 
 function paintTriangle(
-    colors: Array<[number, number, number, number] | null>,
+    pixels: Array<PixelAccumulator | null>,
     width: number,
     height: number,
     triangle: MeshTriangle,
@@ -22,21 +30,26 @@ function paintTriangle(
     rasterizeMeshTriangle(width, height, triangle, (x, y, color) => {
         const offset = y * width + x;
 
-        if (colors[offset] !== null) {
-            return;
-        }
+        const pixel = pixels[offset] ?? {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 0,
+            count: 0,
+        };
 
-        colors[offset] = [
-            Math.round(color[0] * 255),
-            Math.round(color[1] * 255),
-            Math.round(color[2] * 255),
-            color[3],
-        ];
+        pixel.r += color[0] * 255;
+        pixel.g += color[1] * 255;
+        pixel.b += color[2] * 255;
+        pixel.a += color[3];
+        pixel.count += 1;
+
+        pixels[offset] = pixel;
     });
 }
 
 export class ModuleTransformerMeshGradientToCss
-extends GradientTransformerModule<GradientMesh, string> {
+    extends GradientTransformerModule<GradientMesh, string> {
     constructor() {
         super({
             target: "css",
@@ -65,13 +78,14 @@ extends GradientTransformerModule<GradientMesh, string> {
             ...triangles,
             ...edgeTriangles,
         ];
-        const colors: Array<[number, number, number, number] | null> =
+        const pixels: Array<PixelAccumulator | null> =
             Array.from({ length: CSS_SAMPLE_SIZE * CSS_SAMPLE_SIZE }, () => null);
+
         const rects: string[] = [];
 
         for (const triangle of renderTriangles) {
             paintTriangle(
-                colors,
+                pixels,
                 CSS_SAMPLE_SIZE,
                 CSS_SAMPLE_SIZE,
                 triangle,
@@ -80,11 +94,18 @@ extends GradientTransformerModule<GradientMesh, string> {
 
         for (let y = 0; y < CSS_SAMPLE_SIZE; y += 1) {
             for (let x = 0; x < CSS_SAMPLE_SIZE; x += 1) {
-                const color = colors[y * CSS_SAMPLE_SIZE + x];
+                const pixel = pixels[y * CSS_SAMPLE_SIZE + x];
 
-                if (!color) {
+                if (!pixel) {
                     continue;
                 }
+
+                const color: [number, number, number, number] = [
+                    Math.round(pixel.r / pixel.count),
+                    Math.round(pixel.g / pixel.count),
+                    Math.round(pixel.b / pixel.count),
+                    pixel.a / pixel.count,
+                ];
 
                 rects.push(
                     `<rect x="${x}" y="${y}" width="1" height="1" fill="${formatRgbaTupleAsCss(color, 3, ",")}"/>`,
